@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Lato:wght@400;700&display=swap');
+
+:root {
+    --bg-color: #1a1c1e;
+    --card-bg: rgba(44, 48, 53, 0.8);
+    --border-color: rgba(60, 65, 70, 0.9);
+    --text-color: #f0f8ff;
+    --text-muted-color: #a9b2c8;
+    --accent-tech: #00BFFF; /* Electric Blue */
+    --accent-nature: #2E8B57; /* Sea Green */
+    --font-header: 'Exo 2', sans-serif;
+    --font-body: 'Lato', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.background-wrapper {
+    /* The background-image is now set by script.js */
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed; /* Creates the parallax effect */
+    padding: 3rem 1rem;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Header & Intro */
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: var(--card-bg);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid var(--accent-tech);
+    object-fit: cover;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+}
+
+h1 {
+    font-family: var(--font-header);
+    color: var(--text-color);
+    font-size: 3rem;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    color: var(--text-muted-color);
+    font-size: 1.1rem;
+    margin-top: 0;
+}
+
+.social-links {
+    margin-top: 1.5rem;
+}
+
+.social-links a {
+    color: var(--text-muted-color);
+    font-size: 1.8rem;
+    margin: 0 0.75rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.social-links a:hover {
+    color: var(--accent-tech);
+    transform: scale(1.1);
+}
+
+.intro-section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--text-muted-color);
+    margin-bottom: 4rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+}
+
+
+/* Projects Section */
+.projects-section {
+    margin-bottom: 4rem;
+}
+
+h2 {
+    font-family: var(--font-header);
+    font-size: 2.5rem;
+    color: var(--accent-tech);
+    border-bottom: 2px solid var(--accent-tech);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.project-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease-in-out;
+    backdrop-filter: blur(10px);
+}
+
+.project-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 191, 255, 0.2);
+    border-color: var(--accent-tech);
+}
+
+.project-card h3 {
+    font-family: var(--font-header);
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin: 0 0 0.5rem 0;
+}
+
+.project-card p {
+    color: var(--text-muted-color);
+    flex-grow: 1;
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    background-color: var(--accent-tech);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.skill-tags {
+    margin-top: 1rem;
+}
+.skill-tags span {
+    display: inline-block;
+    background-color: rgba(46, 139, 87, 0.2);
+    color: var(--accent-nature);
+    border: 1px solid var(--accent-nature);
+    padding: 4px 8px;
+    margin: 3px;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    color: var(--text-muted-color);
+    opacity: 0.7;
+}
+
+
+/* Scroll Animation */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
