@@ -124,7 +124,7 @@ h2 {
 .project-grid a {
     text-decoration: none;
     color: inherit;
-    display: block;
+    display: flex; /* Changed from block to flex for better consistency */
 }
 
 .project-card {
@@ -136,7 +136,7 @@ h2 {
     flex-direction: column;
     transition: all 0.3s ease-in-out;
     backdrop-filter: blur(10px);
-    height: 100%; /* Make card fill the link's space */
+    width: 100%; /* Ensures the card fills the link container */
     box-sizing: border-box; /* Ensures padding doesn't break layout */
 }
 
@@ -312,4 +312,5 @@ footer {
     opacity: 1;
     transform: translateY(0);
 }
+
 
