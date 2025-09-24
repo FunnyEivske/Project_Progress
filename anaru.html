@@ -135,21 +135,6 @@
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1.5rem;
         }
-        .gallery-item img,
-        .gallery-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: #2c3035; /* Background for videos while loading */
-        }
-        .gallery-item img:hover,
-        .gallery-item video:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
-        }
         
         .placeholder-card {
             width: 100%;
@@ -165,6 +150,7 @@
             color: var(--text-muted-color);
             padding: 1rem;
             transition: border-color 0.3s ease, background-color 0.3s ease;
+            box-sizing: border-box; /* This is the fix! */
         }
         .placeholder-card:hover {
             border-color: var(--accent-tech);
@@ -243,39 +229,29 @@
                 
                 <h3 class="fade-in">Photos</h3>
                 <div class="gallery-grid">
-                    <div class="gallery-item fade-in">
-                        <div class="placeholder-card">
-                            <h3>Add Photo</h3>
-                            <p>Replace this with your image.</p>
-                        </div>
+                    <div class="placeholder-card fade-in">
+                        <h3>Add Photo</h3>
+                        <p>Replace this with your image.</p>
                     </div>
-                    <div class="gallery-item fade-in">
-                        <div class="placeholder-card">
-                            <h3>Add Photo</h3>
-                            <p>Replace this with your image.</p>
-                        </div>
+                    <div class="placeholder-card fade-in">
+                        <h3>Add Photo</h3>
+                        <p>Replace this with your image.</p>
                     </div>
-                    <div class="gallery-item fade-in">
-                        <div class="placeholder-card">
-                            <h3>Add Photo</h3>
-                            <p>Replace this with your image.</p>
-                        </div>
+                    <div class="placeholder-card fade-in">
+                        <h3>Add Photo</h3>
+                        <p>Replace this with your image.</p>
                     </div>
                 </div>
 
                 <h3 class="fade-in">Videos</h3>
                 <div class="gallery-grid">
-                    <div class="gallery-item fade-in">
-                        <div class="placeholder-card">
-                            <h3>Add Video</h3>
-                            <p>Replace this with your video.</p>
-                        </div>
+                    <div class="placeholder-card fade-in">
+                        <h3>Add Video</h3>
+                        <p>Replace this with your video.</p>
                     </div>
-                     <div class="gallery-item fade-in">
-                        <div class="placeholder-card">
-                            <h3>Add Video</h3>
-                            <p>Replace this with your video.</p>
-                        </div>
+                     <div class="placeholder-card fade-in">
+                        <h3>Add Video</h3>
+                        <p>Replace this with your video.</p>
                     </div>
                 </div>
             </section>
@@ -307,50 +283,7 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            // --- Random Background Image ---
-            const backgroundWrapper = document.querySelector('.background-wrapper');
-            const imageUrls = [
-                'https://images-bonnier.imgix.net/files/dif/production/2024/06/23204235/eternal-kingdom-V1sczRo_9vle-__CLHQlXg_xx4524-scaled.jpg?auto=compress,format&w=1500',
-                'https://images-bonnier.imgix.net/files/dif/production/2024/06/23204208/reign-of-ice-Mogb0UbLPi39JhQuJ-TQpA_xx5368-scaled.jpg?auto=compress,format&w=1500',
-                'https://images-bonnier.imgix.net/files/dif/production/2024/06/23204214/redemption-road-qL3N-92RzCAuCSqSSf0_Bg_xx9602-scaled.jpg?auto=compress,format&w=1500',
-                'https://images-bonnier.imgix.net/files/dif/production/2024/06/23204220/firechild-an4WjCBpiNaAS6yXKDPXXA_xx8359-scaled.jpg?auto=compress,format&w=1500',
-                'https://images-bonnier.imgix.net/files/dif/production/2024/06/23204228/yggdrasil-_e3zNZvyNmmijnm2mIjzNg_xx9474-scaled.jpg?auto=compress,format&w=1500'
-            ];
-
-            if (backgroundWrapper) {
-                const randomIndex = Math.floor(Math.random() * imageUrls.length);
-                const randomImageUrl = imageUrls[randomIndex];
-                backgroundWrapper.style.backgroundImage = `url('${randomImageUrl}')`;
-            }
-
-            // --- Smooth Fade-in on Scroll Effect ---
-            const fadeElements = document.querySelectorAll('.fade-in');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry, index) => {
-                    if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.classList.add('visible');
-                        }, index * 100); 
-                    }
-                });
-            }, {
-                threshold: 0.1
-            });
-
-            fadeElements.forEach(element => {
-                observer.observe(element);
-            });
-            
-            // --- Update Footer Year ---
-            const yearElement = document.getElementById('current-year');
-            if (yearElement) {
-                yearElement.textContent = new Date().getFullYear();
-            }
-        });
-    </script>
+    <script src="script.js" defer></script>
 </body>
 </html>
+
