@@ -120,6 +120,13 @@ h2 {
     gap: 1.5rem;
 }
 
+/* This new rule ensures the link wrapping the card is a clickable block */
+.project-grid a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
 .project-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
@@ -129,6 +136,8 @@ h2 {
     flex-direction: column;
     transition: all 0.3s ease-in-out;
     backdrop-filter: blur(10px);
+    height: 100%; /* Make card fill the link's space */
+    box-sizing: border-box; /* Ensures padding doesn't break layout */
 }
 
 .project-card:hover {
@@ -303,3 +312,4 @@ footer {
     opacity: 1;
     transform: translateY(0);
 }
+
