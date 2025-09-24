@@ -6,10 +6,22 @@
     --border-color: rgba(60, 65, 70, 0.9);
     --text-color: #f0f8ff;
     --text-muted-color: #a9b2c8;
-    --accent-tech: #00BFFF; /* Electric Blue */
-    --accent-nature: #2E8B57; /* Sea Green */
     --font-header: 'Exo 2', sans-serif;
     --font-body: 'Lato', sans-serif;
+
+    /* Accent Colors */
+    --accent-tech: #00BFFF; /* Electric Blue */
+    --accent-nature: #2E8B57; /* Sea Green for Anaru */
+    --accent-alastor: #c52424; /* Red for Alastor */
+    --accent-snufkin: #D2691E; /* Earthy brown for Snufkin */
+    --accent-helldiver: #FFD700; /* Gold for Helldiver */
+    --accent-alan-wake: #00FFFF; /* Eerie cyan for Alan Wake */
+    --accent-dr-darling: #FF00FF; /* Magenta for Dr. Darling */
+    --accent-nms-traveler: #FFA500; /* Orange for NMS Traveler */
+    --accent-ogden-ortiz: #FF7F50; /* Coral for Ogden Ortiz */
+    --accent-v60-t: #4169E1; /* Royal Blue for Project V60-T */
+    --accent-larp-armory: #8B4513; /* Saddle Brown for LARP Armory */
+    --accent-prop-lab: #32CD32; /* Lime Green for Prop Lab */
 }
 
 body {
@@ -120,11 +132,10 @@ h2 {
     gap: 1.5rem;
 }
 
-/* This new rule ensures the link wrapping the card is a clickable block */
 .project-grid a {
     text-decoration: none;
     color: inherit;
-    display: flex; /* Changed from block to flex for better consistency */
+    display: flex;
 }
 
 .project-card {
@@ -136,8 +147,8 @@ h2 {
     flex-direction: column;
     transition: all 0.3s ease-in-out;
     backdrop-filter: blur(10px);
-    width: 100%; /* Ensures the card fills the link container */
-    box-sizing: border-box; /* Ensures padding doesn't break layout */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .project-card:hover {
@@ -285,13 +296,26 @@ h2 {
 .log-card h3 {
     font-family: var(--font-header);
     font-size: 1.5rem;
-    color: var(--accent-nature);
     margin: 0 0 0.5rem 0;
+    color: var(--accent-tech); /* Default color */
 }
 .log-card p {
     color: var(--text-muted-color);
     margin: 0;
 }
+
+/* --- Page-Specific Colors --- */
+.anaru-page .log-card h3 { color: var(--accent-nature); }
+.alastor-page .log-card h3 { color: var(--accent-alastor); }
+.snufkin-page .log-card h3 { color: var(--accent-snufkin); }
+.helldiver-page .log-card h3 { color: var(--accent-helldiver); }
+.alan-wake-page .log-card h3 { color: var(--accent-alan-wake); }
+.dr-darling-page .log-card h3 { color: var(--accent-dr-darling); }
+.nms-traveler-page .log-card h3 { color: var(--accent-nms-traveler); }
+.ogden-ortiz-page .log-card h3 { color: var(--accent-ogden-ortiz); }
+.project-v60-t-page .log-card h3 { color: var(--accent-v60-t); }
+.larp-armory-page .log-card h3 { color: var(--accent-larp-armory); }
+.prop-electronics-lab-page .log-card h3 { color: var(--accent-prop-lab); }
 
 /* --- General Footer & Animations --- */
 footer {
@@ -312,5 +336,4 @@ footer {
     opacity: 1;
     transform: translateY(0);
 }
-
 
