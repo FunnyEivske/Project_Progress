@@ -38,21 +38,87 @@
                 
                 <h3 class="fade-in">Photos</h3>
                 <div class="gallery-grid">
-                    <div class="placeholder-card fade-in">
-                        <img src="Media/Images/Aurora.png" alt="Clothing concept art." style="width:100%; height:auto; border-radius: 12px; margin-bottom: 1rem;">
-        <p>Clothing concept art.</p>
-    </div>
-                    <div class="placeholder-card fade-in">
+                    <!-- Card 1 (Existing) -->
+                    <div class="placeholder-card fade-in image-popup-trigger">
+                        <img src="Media/Images/Aurora.png" alt="Clothing concept art." style="width:100%; height:auto; border-radius: 12px; margin-bottom: 1rem; cursor: pointer;">
+                        <p>Clothing concept art.</p>
+                    </div>
+                    <!-- Card 2 (Ready for a photo) -->
+                    <div class="placeholder-card fade-in image-popup-trigger" style="cursor: pointer;">
+                        <!--
+                        TO ADD A PHOTO:
+                        1. Uncomment the <img> line below.
+                        2. Replace "path/to/your/image.png" with your image file path.
+                        3. Update the "alt" description.
+                        4. You can remove the <h3> and <p> tags below.
+                        -->
+                        <!-- <img src="path/to/your/image.png" alt="A description of the new image." style="width:100%; height:auto; border-radius: 12px; margin-bottom: 1rem;"> -->
                         <h3>Add Photo</h3>
-                        <p>Fabric choices for the outfit, prop Fearthers, etc.</p>
+                        <p>Fabric choices for the outfit, prop Feathers, etc.</p>
+                    </div>
+                    <!-- Card 3 (New and ready) -->
+                    <div class="placeholder-card fade-in image-popup-trigger" style="cursor: pointer;">
+                        <!--
+                        TO ADD A PHOTO:
+                        1. Uncomment the <img> line below.
+                        2. Replace "path/to/your/image.png" with your image file path.
+                        3. Update the "alt" description.
+                        4. You can remove the <h3> and <p> tags below.
+                        -->
+                        <!-- <img src="path/to/your/image.png" alt="A description of the new image." style="width:100%; height:auto; border-radius: 12px; margin-bottom: 1rem;"> -->
+                        <h3>Add Photo</h3>
+                        <p>Your description here.</p>
+                    </div>
+                    <!-- Card 4 (New and ready) -->
+                    <div class="placeholder-card fade-in image-popup-trigger" style="cursor: pointer;">
+                        <!--
+                        TO ADD A PHOTO:
+                        1. Uncomment the <img> line below.
+                        2. Replace "path/to/your/image.png" with your image file path.
+                        3. Update the "alt" description.
+                        4. You can remove the <h3> and <p> tags below.
+                        -->
+                        <!-- <img src="path/to/your/image.png" alt="A description of the new image." style="width:100%; height:auto; border-radius: 12px; margin-bottom: 1rem;"> -->
+                        <h3>Add Photo</h3>
+                        <p>Your description here.</p>
                     </div>
                 </div>
 
                 <h3 class="fade-in">Videos</h3>
                 <div class="gallery-grid">
+                    <!-- Video 1 (Ready for a video) -->
                     <div class="placeholder-card fade-in">
+                        <!--
+                        TO ADD A VIDEO:
+                        1. Uncomment the <video> block below.
+                        2. Replace "path/to/your/video.mp4" with your video file path.
+                        3. You can remove the <h3> and <p> tags below.
+                        -->
+                        <!--
+                        <video controls style="width:100%; border-radius: 12px;">
+                            <source src="path/to/your/video.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        -->
                         <h3>Add Video</h3>
                         <p>Test of Wing</p>
+                    </div>
+                    <!-- Video 2 (New and ready) -->
+                    <div class="placeholder-card fade-in">
+                        <!--
+                        TO ADD A VIDEO:
+                        1. Uncomment the <video> block below.
+                        2. Replace "path/to/your/video.mp4" with your video file path.
+                        3. You can remove the <h3> and <p> tags below.
+                        -->
+                        <!--
+                        <video controls style="width:100%; border-radius: 12px;">
+                            <source src="path/to/your/video.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        -->
+                        <h3>Add Video</h3>
+                        <p>Your description here.</p>
                     </div>
                 </div>
             </section>
@@ -77,6 +143,12 @@
                 <p>&copy; <span id="current-year"></span> Anaru's Workshop. All Systems Nominal.</p>
             </footer>
         </div>
+    </div>
+
+    <!-- Modal Structure for the image popup -->
+    <div id="imageModal" class="modal">
+        <span class="close-button">&times;</span>
+        <img class="modal-content" id="modalImage">
     </div>
 
     <!-- Link to your external script file -->

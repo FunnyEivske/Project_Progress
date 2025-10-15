@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    // --- NEW: Random Background Image ---
+    // --- Random Background Image ---
     const backgroundWrapper = document.querySelector('.background-wrapper');
     const imageUrls = [
         'https://images-bonnier.imgix.net/files/dif/production/2024/06/23204235/eternal-kingdom-V1sczRo_9vle-__CLHQlXg_xx4524-scaled.jpg?auto=compress,format&w=1500',
@@ -11,21 +11,16 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     if (backgroundWrapper) {
-        // Pick a random index from the array
         const randomIndex = Math.floor(Math.random() * imageUrls.length);
-        // Get the random image URL
         const randomImageUrl = imageUrls[randomIndex];
-        // Apply it as the background
         backgroundWrapper.style.backgroundImage = `url('${randomImageUrl}')`;
     }
 
     // --- Smooth Fade-in on Scroll Effect ---
     const fadeElements = document.querySelectorAll('.fade-in');
-
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
             if (entry.isIntersecting) {
-                // Add a slight delay to each item for a staggered effect
                 setTimeout(() => {
                     entry.target.classList.add('visible');
                 }, index * 100);
@@ -43,5 +38,40 @@ document.addEventListener('DOMContentLoaded', function() {
     const yearElement = document.getElementById('current-year');
     if (yearElement) {
         yearElement.textContent = new Date().getFullYear();
+    }
+
+    // --- Image Modal (Lightbox) Functionality ---
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+        const modalImg = document.getElementById('modalImage');
+        const closeBtn = document.querySelector('.close-button');
+
+        const triggerImages = document.querySelectorAll('.image-popup-trigger img');
+
+        triggerImages.forEach(img => {
+            img.onclick = function() {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+            }
+        });
+
+        function closeModal() {
+            modal.style.display = "none";
+            modalImg.classList.remove('zoomed');
+        }
+
+        if(closeBtn) {
+            closeBtn.onclick = closeModal;
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+        
+        modalImg.onclick = function() {
+            this.classList.toggle('zoomed');
+        }
     }
 });

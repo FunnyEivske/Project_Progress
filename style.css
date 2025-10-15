@@ -337,3 +337,51 @@ footer {
     transform: translateY(0);
 }
 
+/* --- Image Modal (Lightbox) Styles --- */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top of everything */
+    padding-top: 50px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 900px;
+    transition: transform 0.2s ease-in-out; /* Smooth zoom transition */
+}
+
+/* Add a simple zoom-in effect on click */
+.modal-content.zoomed {
+    transform: scale(1.5); /* Adjust zoom level as needed */
+    cursor: zoom-out;
+}
+
+.modal-content:not(.zoomed) {
+    cursor: zoom-in;
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
