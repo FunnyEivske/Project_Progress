@@ -1,25 +1,25 @@
-// Your web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyBQuF0P7leiyn3ddC1OfsElFyF6F9sZJzw", // Use your full key
-    authDomain: "panel-aurora.firebaseapp.com",
-    projectId: "panel-aurora",
-    storageBucket: "panel-aurora.appspot.com",
-    messagingSenderId: "479594137457",
-    appId: "1:479594137457:web:f3bae0817900e3126218d0"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // --- Random Background Image ---
+
+    // --- Firebase Configuration ---
+    // This is your configuration that you provided.
+    const firebaseConfig = {
+        apiKey: "AIzaSyBQuF0P7leiyn3ddC1OfsElFyF6F9sZJzw",
+        authDomain: "panel-aurora.firebaseapp.com",
+        projectId: "panel-aurora",
+        storageBucket: "panel-aurora.appspot.com",
+        messagingSenderId: "479594137457",
+        appId: "1:479594137457:web:f3bae0817900e3126218d0"
+    };
+
+    // --- App Initialization ---
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+
+    // --- Random Background Image (Restored) ---
     const backgroundWrapper = document.querySelector('.background-wrapper');
-    
     if (backgroundWrapper) {
-        // Define the image sets
         const defaultImages = [
             'Media/Images/Backrounds/Landskap.jpg',
             'Media/Images/Backrounds/Landskap1.jpg',
@@ -32,47 +32,151 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let imageUrl;
         const bodyClass = document.body.className;
-        const randomNumber = Math.random(); 
+        const randomNumber = Math.random();
 
         if (bodyClass.includes('aurora-page') && randomNumber < 0.001) {
             imageUrl = veryRareHuldraImage;
-        } 
-        else if (bodyClass.includes('project-v60-t-page') && randomNumber < 0.05) {
+        } else if (bodyClass.includes('project-v60-t-page') && randomNumber < 0.05) {
             imageUrl = rareVolvoImage;
-        }
-        else if (bodyClass === '') {
+        } else if (bodyClass === '' || bodyClass.includes('index-page')) { // For main page
             if (randomNumber < 0.05) {
                 imageUrl = rareDogImage;
             } else {
                 const randomIndex = Math.floor(Math.random() * defaultImages.length);
                 imageUrl = defaultImages[randomIndex];
             }
-        }
-        else {
+        } else { // For all other pages
             const randomIndex = Math.floor(Math.random() * defaultImages.length);
             imageUrl = defaultImages[randomIndex];
         }
-        
         backgroundWrapper.style.backgroundImage = `url('${imageUrl}')`;
     }
 
-    // --- Smooth Fade-in on Scroll Effect ---
-    const fadeElements = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    entry.target.classList.add('visible');
-                }, index * 100);
+    // --- Function to get Project ID from body class ---
+    function getProjectIdFromClass(className) {
+        const match = className.match(/(\S+)-page/);
+        return match ? match[1] : null;
+    }
+
+    // --- Function to fetch and render dynamic project data ---
+    function fetchProjectData() {
+        const projectId = getProjectIdFromClass(document.body.className);
+        if (!projectId) return;
+
+        const logContainer = document.getElementById('project-log-container');
+        const photoGrid = document.getElementById('photo-gallery-grid');
+        const videoGrid = document.getElementById('video-gallery-grid');
+
+        // Fetch Project Logs
+        if (logContainer) {
+            db.collection('project-logs').where('projectId', '==', projectId).get()
+                .then(querySnapshot => {
+                    if (querySnapshot.empty) {
+                        logContainer.innerHTML = '<p>Ingen prosjektlogger enda. Kom tilbake snart!</p>';
+                        return;
+                    }
+                    logContainer.innerHTML = '';
+                    querySnapshot.forEach(doc => {
+                        const log = doc.data();
+                        const logCard = document.createElement('div');
+                        logCard.className = 'log-card fade-in';
+                        logCard.innerHTML = `<h3>${log.title}</h3><p>${log.content}</p>`;
+                        logContainer.appendChild(logCard);
+                    });
+                    observeFadeInElements();
+                })
+                .catch(error => {
+                    console.error("Error getting project logs: ", error);
+                    logContainer.innerHTML = '<p>Kunne ikke laste prosjektlogger.</p>';
+                });
+        }
+        
+        // Fetch Media
+        if (photoGrid || videoGrid) {
+            db.collection('project-media').where('projectId', '==', projectId).get()
+                .then(querySnapshot => {
+                    // Start with empty containers to clear "Loading..." messages
+                    if (photoGrid) photoGrid.innerHTML = '';
+                    if (videoGrid) videoGrid.innerHTML = '';
+
+                    let photosFound = false;
+                    let videosFound = false;
+
+                    querySnapshot.forEach(doc => {
+                        const media = doc.data();
+                        
+                        if (media.type === 'image' && photoGrid) {
+                            photosFound = true;
+                            const mediaItem = document.createElement('div');
+                            mediaItem.className = 'placeholder-card fade-in image-popup-trigger';
+                            mediaItem.innerHTML = `
+                                <img src="${media.url}" alt="${media.description}" style="width:100%; height:auto; border-radius: 12px; margin-bottom: 1rem; cursor: pointer;">
+                                <p>${media.description}</p>
+                            `;
+                            photoGrid.appendChild(mediaItem);
+                        } else if (media.type === 'video' && videoGrid) {
+                            videosFound = true;
+                            const mediaItem = document.createElement('div');
+                            mediaItem.className = 'placeholder-card fade-in';
+                            mediaItem.innerHTML = `
+                                <video controls style="width:100%; border-radius: 12px; margin-bottom: 1rem;">
+                                    <source src="${media.url}" type="video/mp4">
+                                    Nettleseren din støtter ikke video-taggen.
+                                </video>
+                                <p>${media.description}</p>
+                            `;
+                            videoGrid.appendChild(mediaItem);
+                        }
+                    });
+
+                    // Logic to show placeholder if no media was found
+                    if (photoGrid && !photosFound) {
+                        photoGrid.innerHTML = '<div class="placeholder-card"><p>Ingen bilder lastet opp enda.</p></div>';
+                    }
+                    if (videoGrid && !videosFound) {
+                        videoGrid.innerHTML = '<div class="placeholder-card"><p>Ingen videoer lastet opp enda.</p></div>';
+                    }
+
+                    initializeModal();
+                    observeFadeInElements();
+                })
+                .catch(error => {
+                    console.error("Error getting media: ", error);
+                    if (photoGrid) photoGrid.innerHTML = '<div class="placeholder-card"><p>Kunne ikke laste bilder.</p></div>';
+                    if (videoGrid) videoGrid.innerHTML = '<div class="placeholder-card"><p>Kunne ikke laste videoer.</p></div>';
+                });
+        }
+    }
+
+    // --- Secret Admin Button ---
+    const footer = document.getElementById('footer-section');
+    if (footer) {
+        let clickCount = 0;
+        let clickTimer = null;
+        footer.addEventListener('click', () => {
+            clickCount++;
+            if (clickTimer) clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => { clickCount = 0; }, 1500);
+            if (clickCount >= 5) {
+                window.location.href = 'admin.html';
             }
         });
-    }, {
-        threshold: 0.1
-    });
+    }
 
-    fadeElements.forEach(element => {
-        observer.observe(element);
-    });
+    // --- Smooth Fade-in on Scroll Effect ---
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    function observeFadeInElements() {
+        document.querySelectorAll('.fade-in:not(.visible)').forEach(element => {
+            observer.observe(element);
+        });
+    }
     
     // --- Update Footer Year ---
     const yearElement = document.getElementById('current-year');
@@ -80,147 +184,38 @@ document.addEventListener('DOMContentLoaded', function() {
         yearElement.textContent = new Date().getFullYear();
     }
 
-    // --- "Secret" Admin Button ---
-    const footer = document.getElementById('footer-section');
-    if(footer) {
-        let clickCount = 0;
-        let timer;
-        footer.addEventListener('click', () => {
-            clickCount++;
-            if (clickCount === 5) { // Needs 5 quick clicks to activate
-                window.location.href = 'admin.html';
-            }
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                clickCount = 0;
-            }, 1000); // Reset after 1 second
-        });
-    }
-
-    // --- Dynamic Content Loading from Firebase ---
-    const logContainer = document.getElementById('project-log-container');
-    const photoContainer = document.getElementById('photo-gallery-grid');
-    const videoContainer = document.getElementById('video-gallery-grid');
-
-    if (logContainer || photoContainer || videoContainer) {
-        const projectId = document.body.className.replace('-page', '').trim();
-        
-        if (projectId) {
-            if(logContainer) fetchProjectLogs(projectId);
-            if(photoContainer || videoContainer) fetchProjectMedia(projectId);
-        }
-    }
-
-    function setupImageModal() {
+    // --- Image Modal (Lightbox) Functionality ---
+    function initializeModal() {
         const modal = document.getElementById('imageModal');
-        if (modal) {
-            const modalImg = document.getElementById('modalImage');
-            const closeBtn = document.querySelector('.close-button');
-            const triggerImages = document.querySelectorAll('.image-popup-trigger img');
+        if (!modal) return;
+        const modalImg = document.getElementById('modalImage');
+        const closeBtn = document.querySelector('.close-button');
 
-            triggerImages.forEach(img => {
-                if(img.dataset.modalAttached) return;
-                img.dataset.modalAttached = true;
-                
+        document.querySelectorAll('.image-popup-trigger img').forEach(img => {
+            if (!img.onclick) { // Prevents adding multiple listeners
                 img.onclick = function() {
                     modal.style.display = "block";
                     modalImg.src = this.src;
                 }
-            });
+            }
+        });
 
-            function closeModal() {
-                modal.style.display = "none";
-                modalImg.classList.remove('zoomed');
-            }
+        if (closeBtn && !closeBtn.onclick) closeBtn.onclick = closeModal;
+        window.onclick = function(event) { if (event.target == modal) closeModal(); }
+        if (modalImg && !modalImg.onclick) modalImg.onclick = function() { this.classList.toggle('zoomed'); }
+    }
 
-            if(closeBtn) {
-                closeBtn.onclick = closeModal;
-            }
-
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    closeModal();
-                }
-            }
-            
-            modalImg.onclick = function() {
-                this.classList.toggle('zoomed');
-            }
+    function closeModal() {
+        const modal = document.getElementById('imageModal');
+        if (modal) {
+            modal.style.display = "none";
+            document.getElementById('modalImage').classList.remove('zoomed');
         }
     }
-    setupImageModal(); 
 
-    // --- Firebase Data Fetching Functions (Compat Syntax) ---
-    function fetchProjectLogs(projectId) {
-        const logContainer = document.getElementById('project-log-container');
-        db.collection('project-logs').where('projectId', '==', projectId).orderBy('timestamp', 'desc').get()
-            .then((querySnapshot) => {
-                if(querySnapshot.empty) {
-                    logContainer.innerHTML = '<p>No project logs found. Add one from the admin panel!</p>';
-                    return;
-                }
-
-                let html = '';
-                querySnapshot.forEach((doc) => {
-                    const log = doc.data();
-                    html += `
-                        <div class="log-card fade-in">
-                            <h3>${log.title}</h3>
-                            <p>${log.content.replace(/\n/g, '<br>')}</p>
-                        </div>
-                    `;
-                });
-                logContainer.innerHTML = html;
-                const newFadeElements = logContainer.querySelectorAll('.fade-in');
-                newFadeElements.forEach(el => observer.observe(el));
-            })
-            .catch((error) => {
-                console.error("Error fetching project logs: ", error);
-                logContainer.innerHTML = '<p>Could not load project logs.</p>';
-            });
-    }
-
-    function fetchProjectMedia(projectId) {
-        const photoContainer = document.getElementById('photo-gallery-grid');
-        const videoContainer = document.getElementById('video-gallery-grid');
-
-        db.collection("project-media").where("projectId", "==", projectId).orderBy("timestamp", "desc").get()
-            .then((querySnapshot) => {
-                let photoHtml = '';
-                let videoHtml = '';
-
-                querySnapshot.forEach((doc) => {
-                    const media = doc.data();
-                    if (media.type === 'image') {
-                        photoHtml += `
-                            <div class="placeholder-card fade-in image-popup-trigger">
-                                <img src="${media.url}" alt="${media.description}" style="width:100%; height:auto; border-radius: 12px; margin-bottom: 1rem; cursor: pointer;">
-                                <p>${media.description}</p>
-                            </div>
-                        `;
-                    } else if (media.type === 'video') {
-                        videoHtml += `
-                            <div class="placeholder-card fade-in">
-                                <video controls style="width:100%; border-radius: 12px; margin-bottom: 1rem;">
-                                    <source src="${media.url}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                                <p>${media.description}</p>
-                            </div>
-                        `;
-                    }
-                });
-
-                if (photoContainer) photoContainer.insertAdjacentHTML('beforeend', photoHtml);
-                if (videoContainer) videoContainer.innerHTML = videoHtml || '<p>No videos uploaded yet.</p>';
-                
-                const newFadeElements = document.querySelectorAll('.fade-in:not(.visible)');
-                newFadeElements.forEach(el => observer.observe(el));
-                setupImageModal();
-            })
-            .catch((error) => {
-                console.error("Error fetching project media:", error);
-            });
-    }
+    // --- Initial Page Load ---
+    fetchProjectData();
+    observeFadeInElements();
+    initializeModal();
 });
 
