@@ -37,31 +37,13 @@
                 <h2 class="fade-in">Gallery</h2>
                 
                 <h3 class="fade-in">Photos</h3>
-                <div class="gallery-grid">
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Photo</h3>
-                        <p>Replace this with your image.</p>
-                    </div>
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Photo</h3>
-                        <p>Replace this with your image.</p>
-                    </div>
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Photo</h3>
-                        <p>Replace this with your image.</p>
-                    </div>
+                <div class="gallery-grid" id="photo-gallery-grid">
+                    <p>Loading photos...</p>
                 </div>
 
                 <h3 class="fade-in">Videos</h3>
-                <div class="gallery-grid">
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Video</h3>
-                        <p>Replace this with your video.</p>
-                    </div>
-                     <div class="placeholder-card fade-in">
-                        <h3>Add Video</h3>
-                        <p>Replace this with your video.</p>
-                    </div>
+                <div class="gallery-grid" id="video-gallery-grid">
+                    <p>Loading videos...</p>
                 </div>
             </section>
             
@@ -69,31 +51,29 @@
             <section class="page-section">
                 <h2 class="fade-in">Project Log & Status</h2>
                 
-                <div class="log-card fade-in">
-                    <h3>Current Focus: The Owl Wig</h3>
-                    <p>I have now ordered a wig and high-quality feathers. The next step is to begin crafting the unique owl-like wig and integrated ear tufts to bring the headpiece to life.</p>
-                </div>
-                
-                <div class="log-card fade-in">
-                    <h3>Milestone: Custom Leatherwork</h3>
-                    <p>I got a fantastic leather harness and waist cinch from 'Foxes and Ravens' custom-fitted to me. This forms a high-quality and durable core for the costume.</p>
-                </div>
-
-                <div class="log-card fade-in">
-                    <h3>First Steps: The Base Outfit</h3>
-                    <p>The project began with purchasing the foundational layers: comfortable temporary pants and a good-quality linen shirt to build upon.</p>
+                <div id="project-log-container">
+                    <p>Loading latest project logs...</p>
                 </div>
                 
             </section>
             
-            <footer>
+            <footer id="footer-section">
                 <p>&copy; <span id="current-year"></span> Anaru's Workshop. All Systems Nominal.</p>
             </footer>
         </div>
     </div>
 
+    <!-- Modal Structure for the image popup -->
+    <div id="imageModal" class="modal">
+        <span class="close-button">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <!-- Link to your external script file -->
     <script src="script.js" defer></script>
 </body>
 </html>
-

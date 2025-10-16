@@ -37,23 +37,13 @@
                 <h2 class="fade-in">Gallery</h2>
                 
                 <h3 class="fade-in">Photos</h3>
-                <div class="gallery-grid">
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Photo</h3>
-                        <p>3D prints in progress, wiring diagrams, etc.</p>
-                    </div>
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Photo</h3>
-                        <p>Close-up of a finished circuit or LED effect.</p>
-                    </div>
+                <div class="gallery-grid" id="photo-gallery-grid">
+                    <p>Loading photos...</p>
                 </div>
 
                 <h3 class="fade-in">Videos</h3>
-                <div class="gallery-grid">
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Video</h3>
-                        <p>Demonstration of a programmable LED animation.</p>
-                    </div>
+                <div class="gallery-grid" id="video-gallery-grid">
+                    <p>Loading videos...</p>
                 </div>
             </section>
             
@@ -61,23 +51,27 @@
             <section class="page-section">
                 <h2 class="fade-in">Project Log & Status</h2>
                 
-                <div class="log-card fade-in">
-                    <h3>Current Focus: Learning Advanced Arduino</h3>
-                    <p>Currently diving deeper into Arduino programming to create more complex and interactive lighting effects for upcoming props. The focus is on learning about sensors and wireless communication.</p>
-                </div>
-                
-                <div class="log-card fade-in">
-                    <h3>First Steps: Assembling the Lab</h3>
-                    <p>The lab started by gathering the essential tools: a reliable 3D printer, a quality soldering station, and a starter kit of electronic components and microcontrollers.</p>
+                <div id="project-log-container">
+                    <p>Loading latest project logs...</p>
                 </div>
                 
             </section>
             
-            <footer>
+            <footer id="footer-section">
                 <p>&copy; <span id="current-year"></span> Anaru's Workshop. All Systems Nominal.</p>
             </footer>
         </div>
     </div>
+
+    <!-- Modal Structure for the image popup -->
+    <div id="imageModal" class="modal">
+        <span class="close-button">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <!-- Link to your external script file -->
     <script src="script.js" defer></script>
