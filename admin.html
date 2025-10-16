@@ -4,256 +4,336 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel | Anaru's Workshop</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <style>
         body {
-            font-family: 'Lato', sans-serif;
+            padding: 2rem;
         }
-        h1, h2, h3 {
-            font-family: 'Exo 2', sans-serif;
+        .admin-container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .form-section {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+        h2 {
+            color: var(--accent-tech);
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted-color);
+        }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: #1a1c1e;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+        button {
+            background-color: var(--accent-tech);
+            color: #1a1c1e;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        button:hover {
+            background-color: #00aaff;
+        }
+        #logout-button {
+            background-color: var(--accent-alastor);
+        }
+        .progress-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .progress-control input[type="range"] {
+            flex-grow: 1;
+        }
+        .progress-control input[type="number"] {
+            width: 80px;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body>
 
-    <div class="container mx-auto p-4 md:p-8">
+    <div class="admin-container">
+        <header style="text-align: left;">
+            <h1>Admin Dashboard</h1>
+            <p class="subtitle">Welcome back, Anaru! Let's get the workshop updated.</p>
+        </header>
 
-        <!-- Login Section -->
-        <div id="login-section" class="max-w-md mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
-            <h1 class="text-3xl font-bold mb-6 text-center text-cyan-400">Workshop Control Panel</h1>
-            <p id="auth-error" class="text-red-500 text-center mb-4"></p>
-            <div class="mb-4">
-                <label for="email" class="block mb-2 text-sm font-medium text-gray-300">Email</label>
-                <input type="email" id="email" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="admin@workshop.com" required>
+        <!-- Login/Logout Section -->
+        <div id="auth-section" class="form-section">
+            <h2>Authentication</h2>
+            <div id="login-form">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+                <button id="login-button">Login</button>
             </div>
-            <div class="mb-6">
-                <label for="password" class="block mb-2 text-sm font-medium text-gray-300">Password</label>
-                <input type="password" id="password" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" required>
+            <div id="logout-section" style="display: none;">
+                <p>You are logged in. <span id="user-email"></span></p>
+                <button id="logout-button">Logout</button>
             </div>
-            <button id="login-button" class="w-full text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Login</button>
         </div>
+        
+        <!-- Content Management Section -->
+        <div id="content-management" style="display: none;">
 
-        <!-- Admin Content Section (hidden by default) -->
-        <div id="admin-content" class="hidden">
-            <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold text-cyan-400">Project Dashboard</h1>
-                <button id="logout-button" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">Logout</button>
+            <!-- Update Progress Bar Section -->
+            <div class="form-section">
+                <h2>Update Project Progress</h2>
+                <form id="progress-form">
+                    <label for="progress-project-id">Select Project</label>
+                    <select id="progress-project-id" required>
+                        <!-- Options will be populated by JS -->
+                    </select>
+                    <label for="progress-value">Progress (%)</label>
+                    <div class="progress-control">
+                        <input type="range" id="progress-slider" min="0" max="100" value="0">
+                        <input type="number" id="progress-value" min="0" max="100" value="0">
+                    </div>
+                    <button type="submit">Update Progress</button>
+                </form>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <!-- Project Log Uploader -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <h2 class="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Add New Project Log</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="project-select-log" class="block mb-2 text-sm font-medium text-gray-300">Select Project</label>
-                            <select id="project-select-log" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5">
-                                <option value="anaru">Anaru (OwlHarpy)</option>
-                                <option value="aurora">Aurora</option>
-                                <option value="dr-darling">Dr. Darling</option>
-                                <option value="snufkin">Snufkin (Moomin)</option>
-                                <option value="alastor">Alastor (Hazbin Hotel)</option>
-                                <option value="helldiver">Helldiver EX-03</option>
-                                <option value="nms-traveler">NMS Traveler</option>
-                                <option value="alan-wake">Alan Wake 2</option>
-                                <option value="project-v60-t">Project V60-T</option>
-                                <option value="larp-armory">LARP Armory</option>
-                                <option value="prop-electronics-lab">Prop & Electronics Lab</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="log-title" class="block mb-2 text-sm font-medium text-gray-300">Log Title (e.g., "Current Focus")</label>
-                            <input type="text" id="log-title" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5" placeholder="The Owl Wig">
-                        </div>
-                        <div>
-                            <label for="log-content" class="block mb-2 text-sm font-medium text-gray-300">Log Content</label>
-                            <textarea id="log-content" rows="4" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5" placeholder="I have now ordered a wig and high-quality feathers..."></textarea>
-                        </div>
-                        <button id="add-log-button" class="w-full text-white bg-cyan-600 hover:bg-cyan-700 font-medium rounded-lg text-sm px-5 py-2.5">Add Log Entry</button>
-                        <p id="log-success" class="text-green-400 text-center mt-2"></p>
-                    </div>
-                </div>
-
-                <!-- Media Uploader -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <h2 class="text-2xl font-bold mb-4 border-b border-gray-700 pb-2">Upload Media (Image/Video)</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="project-select-media" class="block mb-2 text-sm font-medium text-gray-300">Select Project</label>
-                            <select id="project-select-media" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5">
-                                <option value="anaru">Anaru (OwlHarpy)</option>
-                                <option value="aurora">Aurora</option>
-                                <option value="dr-darling">Dr. Darling</option>
-                                <option value="snufkin">Snufkin (Moomin)</option>
-                                <option value="alastor">Alastor (Hazbin Hotel)</option>
-                                <option value="helldiver">Helldiver EX-03</option>
-                                <option value="nms-traveler">NMS Traveler</option>
-                                <option value="alan-wake">Alan Wake 2</option>
-                                <option value="project-v60-t">Project V60-T</option>
-                                <option value="larp-armory">LARP Armory</option>
-                                <option value="prop-electronics-lab">Prop & Electronics Lab</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="media-file" class="block mb-2 text-sm font-medium text-gray-300">Choose File</label>
-                            <input type="file" id="media-file" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-cyan-500 file:text-white hover:file:bg-cyan-600">
-                        </div>
-                         <div>
-                            <label for="media-description" class="block mb-2 text-sm font-medium text-gray-300">Description</label>
-                            <input type="text" id="media-description" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5" placeholder="Clothing concept art.">
-                        </div>
-                        <button id="upload-media-button" class="w-full text-white bg-cyan-600 hover:bg-cyan-700 font-medium rounded-lg text-sm px-5 py-2.5">Upload Media</button>
-                        <div id="upload-status" class="mt-2 text-center"></div>
-                    </div>
-                </div>
-
+            <!-- Add Project Log Section -->
+            <div class="form-section">
+                <h2>Add New Project Log</h2>
+                <form id="log-form">
+                    <label for="log-project-id">Select Project</label>
+                    <select id="log-project-id" required>
+                        <!-- Options will be populated by JS -->
+                    </select>
+                    <label for="log-title">Log Title</label>
+                    <input type="text" id="log-title" required>
+                    <label for="log-content">Log Content</label>
+                    <textarea id="log-content" rows="5" required></textarea>
+                    <button type="submit">Add Log</button>
+                </form>
             </div>
+
+            <!-- Upload Media Section -->
+            <div class="form-section">
+                <h2>Upload Media (Image/Video)</h2>
+                <form id="media-form">
+                    <label for="media-project-id">Select Project</label>
+                    <select id="media-project-id" required>
+                       <!-- Options will be populated by JS -->
+                    </select>
+                    <label for="media-file">Choose File</label>
+                    <input type="file" id="media-file" required>
+                    <label for="media-description">Description</label>
+                    <input type="text" id="media-description" required>
+                    <button type="submit">Upload Media</button>
+                    <p id="upload-progress" style="display:none;">Uploading: 0%</p>
+                </form>
+            </div>
+
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const firebaseConfig = {
+                apiKey: "AIzaSyBQuF0P7leiyn3ddC1OfsElFyF6F9sZJzw",
+                authDomain: "panel-aurora.firebaseapp.com",
+                projectId: "panel-aurora",
+                storageBucket: "panel-aurora.appspot.com",
+                messagingSenderId: "479594137457",
+                appId: "1:479594137457:web:f3bae0817900e3126218d0"
+            };
 
-        // *********************************************************************************
-        // **IMPORTANT**: Replace this with your own Firebase project configuration!
-        // You can get this from the Firebase console:
-        // Project settings > General > Your apps > Web app > SDK setup and configuration
-        // *********************************************************************************
-        const firebaseConfig = {
-             apiKey: "AIzaSyBQuF0P7leiyn3ddC1OfsElFyF6F9sZJzw",
-             authDomain: "panel-aurora.firebaseapp.com",
-             projectId: "panel-aurora",
-              storageBucket: "panel-aurora.firebasestorage.app",
-             messagingSenderId: "479594137457",
-             appId: "1:479594137457:web:f3bae0817900e3126218d0",
-             measurementId: "G-8LDTCPWL7V"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
-
-        // DOM Elements
-        const loginSection = document.getElementById('login-section');
-        const adminContent = document.getElementById('admin-content');
-        const loginButton = document.getElementById('login-button');
-        const logoutButton = document.getElementById('logout-button');
-        const addLogButton = document.getElementById('add-log-button');
-        const uploadMediaButton = document.getElementById('upload-media-button');
-        const authError = document.getElementById('auth-error');
-        const logSuccess = document.getElementById('log-success');
-
-        // --- Authentication Logic ---
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                // User is signed in
-                loginSection.classList.add('hidden');
-                adminContent.classList.remove('hidden');
-            } else {
-                // User is signed out
-                loginSection.classList.remove('hidden');
-                adminContent.classList.add('hidden');
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
             }
-        });
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            const storage = firebase.storage();
 
-        loginButton.addEventListener('click', () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            authError.textContent = '';
-            
-            signInWithEmailAndPassword(auth, email, password)
-                .catch(error => {
-                    console.error("Login Error:", error);
-                    authError.textContent = 'Invalid email or password.';
+            const loginForm = document.getElementById('login-form');
+            const logoutSection = document.getElementById('logout-section');
+            const contentManagement = document.getElementById('content-management');
+            const userEmailSpan = document.getElementById('user-email');
+
+            const projects = [
+                { id: 'anaru', name: 'Anaru (OwlHarpy)' },
+                { id: 'aurora', name: 'Aurora' },
+                { id: 'dr-darling', name: 'Dr. Darling' },
+                { id: 'snufkin', name: 'Snufkin (Moomin)' },
+                { id: 'alastor', name: 'Alastor (Hazbin Hotel)' },
+                { id: 'helldiver', name: 'Helldiver EX-03' },
+                { id: 'nms-traveler', name: 'NMS Traveler' },
+                { id: 'alan-wake', name: 'Alan Wake 2' },
+                { id: 'project-v60-t', name: 'Project V60-T' },
+                { id: 'larp-armory', name: 'LARP Armory' },
+                { id: 'prop-electronics-lab', name: 'Prop & Electronics Lab' }
+            ];
+
+            function populateDropdowns() {
+                const selects = document.querySelectorAll('select');
+                let optionsHtml = '';
+                projects.forEach(p => {
+                    optionsHtml += `<option value="${p.id}">${p.name}</option>`;
                 });
-        });
-
-        logoutButton.addEventListener('click', () => {
-            signOut(auth);
-        });
-
-        // --- Add Project Log Logic ---
-        addLogButton.addEventListener('click', async () => {
-            const projectId = document.getElementById('project-select-log').value;
-            const title = document.getElementById('log-title').value;
-            const content = document.getElementById('log-content').value;
-
-            if (!projectId || !title || !content) {
-                alert('Please fill out all log fields.');
-                return;
+                selects.forEach(s => s.innerHTML = optionsHtml);
             }
+            populateDropdowns();
 
-            try {
-                const docRef = await addDoc(collection(db, 'project-logs'), {
-                    projectId: projectId,
-                    title: title,
-                    content: content,
-                    timestamp: serverTimestamp()
-                });
-                console.log("Document written with ID: ", docRef.id);
-                logSuccess.textContent = 'Log entry added successfully!';
-                document.getElementById('log-title').value = '';
-                document.getElementById('log-content').value = '';
-                setTimeout(() => logSuccess.textContent = '', 3000);
-            } catch (e) {
-                console.error("Error adding document: ", e);
-                logSuccess.textContent = 'Error adding log. Check console.';
-            }
-        });
-        
-        // --- Upload Media Logic ---
-        uploadMediaButton.addEventListener('click', async () => {
-            const projectId = document.getElementById('project-select-media').value;
-            const file = document.getElementById('media-file').files[0];
-            const description = document.getElementById('media-description').value;
-            const statusDiv = document.getElementById('upload-status');
+            // Auth state listener
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    loginForm.style.display = 'none';
+                    logoutSection.style.display = 'block';
+                    contentManagement.style.display = 'block';
+                    userEmailSpan.textContent = user.email;
+                    // Trigger initial progress fetch
+                    fetchCurrentProgress(document.getElementById('progress-project-id').value);
+                } else {
+                    loginForm.style.display = 'block';
+                    logoutSection.style.display = 'none';
+                    contentManagement.style.display = 'none';
+                }
+            });
 
-            if (!projectId || !file || !description) {
-                alert('Please select a project, file, and add a description.');
-                return;
-            }
+            // Login
+            document.getElementById('login-button').addEventListener('click', () => {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                auth.signInWithEmailAndPassword(email, password)
+                    .catch(error => alert('Login Failed: ' + error.message));
+            });
 
-            statusDiv.innerHTML = `<p class="text-yellow-400">Uploading...</p>`;
-            const fileType = file.type.split('/')[0]; // "image" or "video"
-            const storageRef = ref(storage, `media/${projectId}/${file.name}`);
+            // Logout
+            document.getElementById('logout-button').addEventListener('click', () => auth.signOut());
 
-            try {
-                // Upload file
-                const snapshot = await uploadBytes(storageRef, file);
-                // Get download URL
-                const downloadURL = await getDownloadURL(snapshot.ref);
-
-                // Save URL and metadata to Firestore
-                await addDoc(collection(db, 'project-media'), {
-                    projectId: projectId,
-                    url: downloadURL,
-                    description: description,
-                    type: fileType, // 'image' or 'video'
-                    fileName: file.name,
-                    timestamp: serverTimestamp()
-                });
-
-                statusDiv.innerHTML = `<p class="text-green-400">Upload successful!</p>
-                <p class="text-xs text-gray-400 mt-2">URL: ${downloadURL}</p>`;
+            // Add Project Log
+            document.getElementById('log-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const projectId = document.getElementById('log-project-id').value;
+                const title = document.getElementById('log-title').value;
+                const content = document.getElementById('log-content').value;
                 
-                document.getElementById('media-file').value = '';
-                document.getElementById('media-description').value = '';
+                db.collection('project-logs').add({
+                    projectId,
+                    title,
+                    content,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    alert('Log added successfully!');
+                    e.target.reset();
+                }).catch(error => alert('Error adding log: ' + error.message));
+            });
 
-            } catch(error) {
-                console.error("Upload failed:", error);
-                statusDiv.innerHTML = `<p class="text-red-500">Upload failed. See console for details.</p>`;
+            // Upload Media
+            document.getElementById('media-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const projectId = document.getElementById('media-project-id').value;
+                const file = document.getElementById('media-file').files[0];
+                const description = document.getElementById('media-description').value;
+                const progressP = document.getElementById('upload-progress');
+
+                if (!file) {
+                    alert('Please select a file to upload.');
+                    return;
+                }
+
+                const fileType = file.type.split('/')[0];
+                const storageRef = storage.ref(`${projectId}/${Date.now()}_${file.name}`);
+                const uploadTask = storageRef.put(file);
+
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        progressP.style.display = 'block';
+                        progressP.textContent = `Uploading: ${Math.round(progress)}%`;
+                    }, 
+                    (error) => {
+                        alert('Upload failed: ' + error.message);
+                        progressP.style.display = 'none';
+                    }, 
+                    () => {
+                        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                            db.collection('project-media').add({
+                                projectId,
+                                url: downloadURL,
+                                description,
+                                type: fileType,
+                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                            }).then(() => {
+                                alert('Media uploaded successfully!');
+                                e.target.reset();
+                                progressP.style.display = 'none';
+                            });
+                        });
+                    }
+                );
+            });
+
+             // --- Progress Bar Section Logic ---
+            const progressProjectIdSelect = document.getElementById('progress-project-id');
+            const progressSlider = document.getElementById('progress-slider');
+            const progressValueInput = document.getElementById('progress-value');
+            
+            // Sync slider and number input
+            progressSlider.addEventListener('input', () => progressValueInput.value = progressSlider.value);
+            progressValueInput.addEventListener('input', () => progressSlider.value = progressValueInput.value);
+
+            // Fetch current progress when dropdown changes
+            progressProjectIdSelect.addEventListener('change', (e) => {
+                fetchCurrentProgress(e.target.value);
+            });
+
+            function fetchCurrentProgress(projectId) {
+                db.collection('project-progress').doc(projectId).get().then(doc => {
+                    if (doc.exists) {
+                        const progress = doc.data().progress || 0;
+                        progressSlider.value = progress;
+                        progressValueInput.value = progress;
+                    } else {
+                        // If no progress is saved yet, reset to 0
+                        progressSlider.value = 0;
+                        progressValueInput.value = 0;
+                    }
+                }).catch(error => {
+                    console.error("Error fetching current progress:", error);
+                    // Reset to 0 on error
+                    progressSlider.value = 0;
+                    progressValueInput.value = 0;
+                });
             }
-        });
 
+            // Handle form submission to update progress
+            document.getElementById('progress-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const projectId = progressProjectIdSelect.value;
+                const progress = parseInt(progressValueInput.value, 10);
+
+                db.collection('project-progress').doc(projectId).set({
+                    progress: progress
+                }).then(() => {
+                    alert(`Progress for ${projectId} updated to ${progress}%!`);
+                }).catch(error => alert('Error updating progress: ' + error.message));
+            });
+        });
     </script>
 </body>
 </html>
+
