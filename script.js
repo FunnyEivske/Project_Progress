@@ -21,12 +21,23 @@ document.addEventListener('DOMContentLoaded', function() {
     if (backgroundWrapper) {
         const defaultImages = [ 'Media/Images/Backrounds/Landskap.jpg', 'Media/Images/Backrounds/Landskap1.jpg', 'Media/Images/Backrounds/Landskap2.jpg', 'Media/Images/Backrounds/Landskap3.jpg' ];
         const rareDogImage = 'Media/Images/Backrounds/Dog.jpg';
-        const veryRareHuldraImage = 'Media/Images/Backrounds/Huldra.jpg';
         const rareVolvoImage = 'Media/Images/Backrounds/Volvo.jpg';
+        
+        // Aurora's special rare images
+        const veryRareAuroraImages = [
+            'Media/Images/Backrounds/Huldra.jpg',
+            'Media/Images/Backrounds/E.jpg', // rareshjalg
+            'Media/Images/Backrounds/Huldra2.jpg' // VeryRareHuldraImage2
+        ];
+
         let imageUrl;
         const bodyClass = document.body.className;
         const randomNumber = Math.random();
-        if (bodyClass.includes('aurora-page') && randomNumber < 0.001) { imageUrl = veryRareHuldraImage; } 
+
+        if (bodyClass.includes('aurora-page') && randomNumber < 0.001) { 
+            const randomIndex = Math.floor(Math.random() * veryRareAuroraImages.length);
+            imageUrl = veryRareAuroraImages[randomIndex];
+        } 
         else if (bodyClass.includes('project-v60-t-page') && randomNumber < 0.05) { imageUrl = rareVolvoImage; } 
         else if (bodyClass.includes('index-page')) {
             if (randomNumber < 0.05) { imageUrl = rareDogImage; } 
@@ -191,3 +202,4 @@ document.addEventListener('DOMContentLoaded', function() {
     observeFadeInElements();
     initializeModal();
 });
+
