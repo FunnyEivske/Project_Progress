@@ -191,5 +191,3 @@ document.addEventListener('DOMContentLoaded', function() {
     observeFadeInElements();
     initializeModal();
 });
-
-// --- Initial Page Load ---
