@@ -37,23 +37,13 @@
                 <h2 class="fade-in">Gallery</h2>
                 
                 <h3 class="fade-in">Photos</h3>
-                <div class="gallery-grid">
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Photo</h3>
-                        <p>Fabric swatches, wig styling, prop progress, etc.</p>
-                    </div>
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Photo</h3>
-                        <p>Replace with your image.</p>
-                    </div>
+                <div class="gallery-grid" id="photo-gallery-grid">
+                    <p>Loading photos...</p>
                 </div>
 
                 <h3 class="fade-in">Videos</h3>
-                <div class="gallery-grid">
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Video</h3>
-                        <p>Makeup tests, costume fittings, etc.</p>
-                    </div>
+                <div class="gallery-grid" id="video-gallery-grid">
+                    <p>Loading videos...</p>
                 </div>
             </section>
             
@@ -61,31 +51,29 @@
             <section class="page-section">
                 <h2 class="fade-in">Project Log & Status</h2>
                 
-                <div class="log-card fade-in">
-                    <h3>Current Focus: Mic Prop & Wig</h3>
-                    <p>I am currently working on building the microphone prop and am on the hunt for the perfect wig to serve as the base for Alastor's unique hairstyle.</p>
-                </div>
-                
-                <div class="log-card fade-in">
-                    <h3>Milestone: Suit Drawn Up</h3>
-                    <p>The design for the suit has been fully drawn up. The next step is to move on to pattern creation and fabric selection.</p>
-                </div>
-
-                <div class="log-card fade-in">
-                    <h3>First Steps: Research & Planning</h3>
-                    <p>The project started with an in-depth character study, gathering hundreds of reference images and screenshots to capture every detail of his design.</p>
+                <div id="project-log-container">
+                    <p>Loading latest project logs...</p>
                 </div>
                 
             </section>
             
-            <footer>
+            <footer id="footer-section">
                 <p>&copy; <span id="current-year"></span> Anaru's Workshop. All Systems Nominal.</p>
             </footer>
         </div>
     </div>
 
+    <!-- Modal Structure for the image popup -->
+    <div id="imageModal" class="modal">
+        <span class="close-button">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <!-- Link to your external script file -->
     <script src="script.js" defer></script>
 </body>
 </html>
-

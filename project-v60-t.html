@@ -65,23 +65,13 @@
                 <h2 class="fade-in">Gallery</h2>
                 
                 <h3 class="fade-in">Photos</h3>
-                <div class="gallery-grid">
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Photo</h3>
-                        <p>The stock Volvo V60 D6, before modifications.</p>
-                    </div>
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Photo</h3>
-                        <p>Drivetrain schematics, battery layout plans, etc.</p>
-                    </div>
+                <div class="gallery-grid" id="photo-gallery-grid">
+                    <p>Loading photos...</p>
                 </div>
 
                 <h3 class="fade-in">Videos</h3>
-                <div class="gallery-grid">
-                    <div class="placeholder-card fade-in">
-                        <h3>Add Video</h3>
-                        <p>A walkthrough of the donor Tesla parts, maybe?</p>
-                    </div>
+                <div class="gallery-grid" id="video-gallery-grid">
+                    <p>Loading videos...</p>
                 </div>
             </section>
             
@@ -89,23 +79,27 @@
             <section class="page-section">
                 <h2 class="fade-in">Project Log & Status</h2>
                 
-                <div class="log-card fade-in">
-                    <h3>Current Focus: Drivetrain Research</h3>
-                    <p>Currently deep in the research phase, identifying the best Tesla motor and battery combination that will be compatible with the V60's chassis. This involves studying CAN bus systems, motor mounts, and power management.</p>
-                </div>
-                
-                <div class="log-card fade-in">
-                    <h3>First Steps: The Dream</h3>
-                    <p>The project began as a dream to combine the comfort and style of my favorite Volvo with the incredible performance of a Tesla. The first real step is saving up and sourcing the perfect V60 D6 to serve as the base.</p>
+                <div id="project-log-container">
+                    <p>Loading latest project logs...</p>
                 </div>
                 
             </section>
             
-            <footer>
+            <footer id="footer-section">
                 <p>&copy; <span id="current-year"></span> Anaru's Workshop. All Systems Nominal.</p>
             </footer>
         </div>
     </div>
+
+    <!-- Modal Structure for the image popup -->
+    <div id="imageModal" class="modal">
+        <span class="close-button">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <!-- Link to your external script file -->
     <script src="script.js" defer></script>

@@ -37,9 +37,8 @@
                 <h2 class="fade-in">Gallery</h2>
                 
                 <h3 class="fade-in">Photos</h3>
-                <!-- This container will be filled dynamically by script.js -->
-                <div id="photo-gallery-grid" class="gallery-grid">
-                    <!-- Example of an existing static image -->
+                <!-- This is where photos from Firebase will be added -->
+                <div class="gallery-grid" id="photo-gallery-grid">
                      <div class="placeholder-card fade-in image-popup-trigger">
                         <img src="Media\Images\Characters\Aurora\Aurora.png" alt="Clothing concept art." style="width:100%; height:auto; border-radius: 12px; margin-bottom: 1rem; cursor: pointer;">
                         <p>Clothing concept art.</p>
@@ -47,9 +46,9 @@
                 </div>
 
                 <h3 class="fade-in">Videos</h3>
-                 <!-- This container will be filled dynamically by script.js -->
-                <div id="video-gallery-grid" class="gallery-grid">
-                    <!-- Dynamic videos will be added here -->
+                 <!-- This is where videos from Firebase will be added -->
+                <div class="gallery-grid" id="video-gallery-grid">
+                    <p>Loading videos...</p>
                 </div>
             </section>
             
@@ -57,9 +56,9 @@
             <section class="page-section">
                 <h2 class="fade-in">Project Log & Status</h2>
                 
-                <!-- This container will be filled dynamically by script.js -->
+                 <!-- This is where project logs from Firebase will be added -->
                 <div id="project-log-container">
-                    <p class="text-center text-gray-400">Loading latest project logs...</p>
+                    <p>Loading latest project logs...</p>
                 </div>
                 
             </section>
@@ -76,7 +75,12 @@
         <img class="modal-content" id="modalImage">
     </div>
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <!-- Link to your external script file -->
     <script src="script.js" defer></script>
 </body>
 </html>
+
