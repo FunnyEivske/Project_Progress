@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let imageUrl;
         const bodyClass = document.body.className;
         const randomNumber = Math.random();
-        if (bodyClass.includes('aurora-page') && randomNumber < 0.1) { imageUrl = veryRareHuldraImage; } 
+        if (bodyClass.includes('aurora-page') && randomNumber < 0.001) { imageUrl = veryRareHuldraImage; } 
         else if (bodyClass.includes('project-v60-t-page') && randomNumber < 0.05) { imageUrl = rareVolvoImage; } 
         else if (bodyClass.includes('index-page')) {
             if (randomNumber < 0.05) { imageUrl = rareDogImage; } 
