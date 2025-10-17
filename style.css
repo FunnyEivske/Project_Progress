@@ -10,7 +10,7 @@
     --font-body: 'Lato', sans-serif;
 
     /* Accent Colors */
-    --accent-tech: #00BFFF; /* Electric Blue */
+    --accent-tech: #48D1CC; /* Medium Turquoise */
     --accent-nature: #2E8B57; /* Sea Green for Anaru */
     --accent-alastor: #c52424; /* Red for Alastor */
     --accent-snufkin: #D2691E; /* Earthy brown for Snufkin */
@@ -18,7 +18,7 @@
     --accent-alan-wake: #00FFFF; /* Eerie cyan for Alan Wake */
     --accent-dr-darling: #FF00FF; /* Magenta for Dr. Darling */
     --accent-nms-traveler: #FFA500; /* Orange for NMS Traveler */
-    --accent-ogden-ortiz: #FF7F50; /* Coral for Ogden Ortiz */
+    --accent-aurora: #556B2F; /* Dark Olive Green for Aurora */
     --accent-v60-t: #4169E1; /* Royal Blue for Project V60-T */
     --accent-larp-armory: #8B4513; /* Saddle Brown for LARP Armory */
     --accent-prop-lab: #32CD32; /* Lime Green for Prop Lab */
@@ -65,7 +65,7 @@ header {
     border: 4px solid var(--accent-tech);
     object-fit: cover;
     margin-bottom: 1rem;
-    box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+    box-shadow: 0 0 20px rgba(72, 209, 204, 0.4); /* Updated shadow to match */
 }
 
 h1 {
@@ -153,7 +153,7 @@ h2 {
 
 .project-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 30px rgba(0, 191, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(72, 209, 204, 0.2); /* Updated shadow */
     border-color: var(--accent-tech);
 }
 
@@ -217,9 +217,14 @@ h2 {
     margin-right: 8px;
 }
 
-/* Page Content Section */
+/* Page Content Section - UPDATED */
 .page-section {
-     margin-bottom: 4rem;
+     margin-bottom: 3rem;
+     background: var(--card-bg);
+     border: 1px solid var(--border-color);
+     border-radius: 12px;
+     padding: 2rem;
+     backdrop-filter: blur(10px);
 }
 
 .page-section h3 {
@@ -238,21 +243,6 @@ h2 {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1.5rem;
 }
-.gallery-item img,
-.gallery-item video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #2c3035; /* Background for videos while loading */
-}
-.gallery-item img:hover,
-.gallery-item video:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
-}
 
 .placeholder-card {
     box-sizing: border-box;
@@ -268,19 +258,18 @@ h2 {
     color: var(--text-color);
     padding: 1rem;
     transition: border-color 0.3s ease, background-color 0.3s ease;
-    /* NEW STYLES */
-    background: var(--card-bg);
+    background: rgba(0,0,0,0.2); /* Darker background for contrast inside the section */
     border: 1px solid var(--border-color);
-    backdrop-filter: blur(10px);
 }
 .placeholder-card:hover {
     border-color: var(--accent-tech);
-    background-color: rgba(0, 191, 255, 0.1);
+    background-color: rgba(72, 209, 204, 0.1); /* Updated hover */
 }
 .placeholder-card h3 {
     margin: 0 0 0.5rem 0;
     color: var(--text-color);
     font-size: 1.2rem;
+    border-bottom: none; /* Remove border from h3 inside placeholder */
 }
 .placeholder-card p {
     margin: 0;
@@ -290,43 +279,35 @@ h2 {
 
 /* Project Log Card */
 .log-card {
-    background: var(--card-bg);
+    background: rgba(0,0,0,0.2); /* Darker background for contrast inside the section */
     border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 1.5rem;
-    backdrop-filter: blur(10px);
     margin-bottom: 1.5rem;
 }
 .log-card h3 {
     font-family: var(--font-header);
     font-size: 1.5rem;
     margin: 0 0 0.5rem 0;
-    color: var(--accent-tech); /* Default color */
+    color: var(--accent-tech); /* Default color, overridden below */
+    border-bottom: none; /* Remove border from h3 inside log card */
 }
 .log-card p {
     color: var(--text-muted-color);
     margin: 0;
 }
 
-/* --- Page-Specific Colors --- */
-.anaru-page .log-card h3 { color: var(--accent-nature); }
-.alastor-page .log-card h3 { color: var(--accent-alastor); }
-.snufkin-page .log-card h3 { color: var(--accent-snufkin); }
-.helldiver-page .log-card h3 { color: var(--accent-helldiver); }
-.alan-wake-page .log-card h3 { color: var(--accent-alan-wake); }
-.dr-darling-page .log-card h3 { color: var(--accent-dr-darling); }
-.nms-traveler-page .log-card h3 { color: var(--accent-nms-traveler); }
-.ogden-ortiz-page .log-card h3 { color: var(--accent-ogden-ortiz); }
-.project-v60-t-page .log-card h3 { color: var(--accent-v60-t); }
-.larp-armory-page .log-card h3 { color: var(--accent-larp-armory); }
-.prop-electronics-lab-page .log-card h3 { color: var(--accent-prop-lab); }
 
 /* --- General Footer & Animations --- */
 footer {
     text-align: center;
     color: var(--text-muted-color);
-    opacity: 0.7;
-    padding-top: 2rem;
+    padding: 1.5rem;
+    margin-top: 3rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
 }
 
 /* Scroll Animation */
@@ -362,13 +343,10 @@ footer {
     max-width: 900px;
     transition: transform 0.2s ease-in-out; /* Smooth zoom transition */
 }
-
-/* Add a simple zoom-in effect on click */
 .modal-content.zoomed {
-    transform: scale(1.5); /* Adjust zoom level as needed */
+    transform: scale(1.5);
     cursor: zoom-out;
 }
-
 .modal-content:not(.zoomed) {
     cursor: zoom-in;
 }
@@ -390,4 +368,86 @@ footer {
     cursor: pointer;
 }
 
-/*load*/
+/*
+--- --- --- --- --- --- --- --- --- --- --- ---
+    NEW: PAGE-SPECIFIC COLOR OVERRIDES
+--- --- --- --- --- --- --- --- --- --- --- ---
+*/
+
+/* --- Anaru Page --- */
+.anaru-page h2,
+.anaru-page .back-link,
+.anaru-page .log-card h3 { color: var(--accent-nature); }
+.anaru-page h2 { border-bottom-color: var(--accent-nature); }
+.anaru-page .placeholder-card:hover { border-color: var(--accent-nature); background-color: rgba(46, 139, 87, 0.1); }
+
+/* --- Alastor Page --- */
+.alastor-page h2,
+.alastor-page .back-link,
+.alastor-page .log-card h3 { color: var(--accent-alastor); }
+.alastor-page h2 { border-bottom-color: var(--accent-alastor); }
+.alastor-page .placeholder-card:hover { border-color: var(--accent-alastor); background-color: rgba(197, 36, 36, 0.1); }
+
+/* --- Snufkin Page --- */
+.snufkin-page h2,
+.snufkin-page .back-link,
+.snufkin-page .log-card h3 { color: var(--accent-snufkin); }
+.snufkin-page h2 { border-bottom-color: var(--accent-snufkin); }
+.snufkin-page .placeholder-card:hover { border-color: var(--accent-snufkin); background-color: rgba(210, 105, 30, 0.1); }
+
+/* --- Helldiver Page --- */
+.helldiver-page h2,
+.helldiver-page .back-link,
+.helldiver-page .log-card h3 { color: var(--accent-helldiver); }
+.helldiver-page h2 { border-bottom-color: var(--accent-helldiver); }
+.helldiver-page .placeholder-card:hover { border-color: var(--accent-helldiver); background-color: rgba(255, 215, 0, 0.1); }
+
+/* --- Alan Wake Page --- */
+.alan-wake-page h2,
+.alan-wake-page .back-link,
+.alan-wake-page .log-card h3 { color: var(--accent-alan-wake); }
+.alan-wake-page h2 { border-bottom-color: var(--accent-alan-wake); }
+.alan-wake-page .placeholder-card:hover { border-color: var(--accent-alan-wake); background-color: rgba(0, 255, 255, 0.1); }
+
+/* --- Dr. Darling Page --- */
+.dr-darling-page h2,
+.dr-darling-page .back-link,
+.dr-darling-page .log-card h3 { color: var(--accent-dr-darling); }
+.dr-darling-page h2 { border-bottom-color: var(--accent-dr-darling); }
+.dr-darling-page .placeholder-card:hover { border-color: var(--accent-dr-darling); background-color: rgba(255, 0, 255, 0.1); }
+
+/* --- NMS Traveler Page --- */
+.nms-traveler-page h2,
+.nms-traveler-page .back-link,
+.nms-traveler-page .log-card h3 { color: var(--accent-nms-traveler); }
+.nms-traveler-page h2 { border-bottom-color: var(--accent-nms-traveler); }
+.nms-traveler-page .placeholder-card:hover { border-color: var(--accent-nms-traveler); background-color: rgba(255, 165, 0, 0.1); }
+
+/* --- Aurora Page --- */
+.aurora-page h2,
+.aurora-page .back-link,
+.aurora-page .log-card h3 { color: var(--accent-aurora); }
+.aurora-page h2 { border-bottom-color: var(--accent-aurora); }
+.aurora-page .placeholder-card:hover { border-color: var(--accent-aurora); background-color: rgba(85, 107, 47, 0.1); }
+
+/* --- Project V60-T Page --- */
+.project-v60-t-page h2,
+.project-v60-t-page .back-link,
+.project-v60-t-page .log-card h3 { color: var(--accent-v60-t); }
+.project-v60-t-page h2 { border-bottom-color: var(--accent-v60-t); }
+.project-v60-t-page .placeholder-card:hover { border-color: var(--accent-v60-t); background-color: rgba(65, 105, 225, 0.1); }
+
+/* --- LARP Armory Page --- */
+.larp-armory-page h2,
+.larp-armory-page .back-link,
+.larp-armory-page .log-card h3 { color: var(--accent-larp-armory); }
+.larp-armory-page h2 { border-bottom-color: var(--accent-larp-armory); }
+.larp-armory-page .placeholder-card:hover { border-color: var(--accent-larp-armory); background-color: rgba(139, 69, 19, 0.1); }
+
+/* --- Prop & Electronics Lab Page --- */
+.prop-electronics-lab-page h2,
+.prop-electronics-lab-page .back-link,
+.prop-electronics-lab-page .log-card h3 { color: var(--accent-prop-lab); }
+.prop-electronics-lab-page h2 { border-bottom-color: var(--accent-prop-lab); }
+.prop-electronics-lab-page .placeholder-card:hover { border-color: var(--accent-prop-lab); background-color: rgba(50, 205, 50, 0.1); }
+
