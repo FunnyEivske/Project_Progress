@@ -69,7 +69,7 @@
     <div class="admin-container">
         <header style="text-align: left;">
             <h1>Admin Dashboard</h1>
-            <p class="subtitle">Welcome back, Anaru! Let's get the workshop updated.</p>
+            <p class="subtitle" id="welcome-subtitle">Welcome back, Anaru! Let's get the workshop updated.</p>
         </header>
 
         <!-- Login/Logout Section -->
@@ -143,6 +143,13 @@
 
         </div>
     </div>
+    
+    <!-- Hidden audio elements for the special login/logout sounds -->
+    <audio id="login-sound-rare" src="Media/sounds/Welcome.oga" preload="auto"></audio>
+    <audio id="login-sound-common" src="Media/sounds/On.oga" preload="auto"></audio>
+    <audio id="logout-sound-common" src="Media/sounds/Off.oga" preload="auto"></audio>
+    <audio id="logout-sound-rare" src="Media/sounds/Abandon.oga" preload="auto"></audio>
+
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -199,17 +206,33 @@
 
             // Auth state listener
             auth.onAuthStateChanged(user => {
+                const welcomeSubtitle = document.getElementById('welcome-subtitle');
                 if (user) {
+                    // --- NEW: Multi-Tier Special Welcome Message Logic ---
+                    const randomNumber = Math.random();
+                    // Set a 2% chance for the super rare message
+                    if (randomNumber < 0.02) { 
+                        welcomeSubtitle.textContent = "You are the best captain on the planet, I'm not even squiddin";
+                        document.getElementById('login-sound-rare').play().catch(e => console.error("Audio play failed.", e));
+                    // Set a 15% chance for the common special message
+                    } else if (randomNumber < 0.17) { // 0.02 + 0.15 = 0.17
+                        welcomeSubtitle.textContent = "Welcome back, Anaru! Let's get the workshop updated.";
+                        document.getElementById('login-sound-common').play().catch(e => console.error("Audio play failed.", e));
+                    } else {
+                        welcomeSubtitle.textContent = "Welcome back, Anaru! Let's get the workshop updated.";
+                    }
+                    
                     loginForm.style.display = 'none';
                     logoutSection.style.display = 'block';
                     contentManagement.style.display = 'block';
                     userEmailSpan.textContent = user.email;
-                    // Trigger initial progress fetch
                     fetchCurrentProgress(document.getElementById('progress-project-id').value);
                 } else {
                     loginForm.style.display = 'block';
                     logoutSection.style.display = 'none';
                     contentManagement.style.display = 'none';
+                    // Reset welcome text on logout
+                    welcomeSubtitle.textContent = "Welcome back, Anaru! Let's get the workshop updated.";
                 }
             });
 
@@ -221,8 +244,28 @@
                     .catch(error => alert('Login Failed: ' + error.message));
             });
 
-            // Logout
-            document.getElementById('logout-button').addEventListener('click', () => auth.signOut());
+            // Logout with new sound logic
+            document.getElementById('logout-button').addEventListener('click', () => {
+                const randomNumber = Math.random();
+                let soundPlayed = false;
+
+                // 2% chance for rare logout sound
+                if (randomNumber < 0.02) {
+                    soundPlayed = true;
+                    document.getElementById('logout-sound-rare').play().catch(e => console.error("Audio play failed.", e));
+                // 15% chance for common logout sound
+                } else if (randomNumber < 0.17) {
+                    soundPlayed = true;
+                    document.getElementById('logout-sound-common').play().catch(e => console.error("Audio play failed.", e));
+                }
+
+                // If a sound was played, wait a moment before signing out. Otherwise, sign out instantly.
+                if (soundPlayed) {
+                    setTimeout(() => auth.signOut(), 500); // Wait 500ms for sound to play
+                } else {
+                    auth.signOut();
+                }
+            });
 
             // Add Project Log
             document.getElementById('log-form').addEventListener('submit', (e) => {

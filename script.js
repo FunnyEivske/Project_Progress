@@ -16,6 +16,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const db = firebase.firestore();
 
+    // --- Automated System Health Tracker ---
+    const systemHealth = {
+        logs: 'ok',
+        media: 'ok',
+        progress: 'ok'
+    };
+    const firebaseStatus = {
+        level: 'optimal',
+        customMessage: null
+    };
+
+    // --- Central function to update the footer status message ---
+    function updateSystemStatusMessage() {
+        const statusElement = document.getElementById('system-status');
+        if (!statusElement) return;
+
+        // An automated error has the highest priority
+        if (Object.values(systemHealth).includes('error')) {
+            statusElement.textContent = 'some systems need attention.';
+            return;
+        }
+
+        // If no errors, check for a manual override message from Firebase
+        if (firebaseStatus.customMessage) {
+            statusElement.textContent = firebaseStatus.customMessage;
+            return;
+        }
+
+        // If no errors and no override, use the manual level from Firebase
+        if (firebaseStatus.level === 'optimal') {
+            statusElement.textContent = 'all systems online.';
+        } else if (firebaseStatus.level === 'warning') {
+            statusElement.textContent = 'some systems need attention.';
+        } else {
+            statusElement.textContent = 'all systems online.'; // Default fallback
+        }
+    }
+
+
     // --- Random Background Image ---
     const backgroundWrapper = document.querySelector('.background-wrapper');
     if (backgroundWrapper) {
@@ -23,11 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const rareDogImage = 'Media/Images/Backrounds/Dog.jpg';
         const rareVolvoImage = 'Media/Images/Backrounds/Volvo.jpg';
         
-        // Aurora's special rare images
         const veryRareAuroraImages = [
-            'Media/Images/Backrounds/Huldra.jpg',
-            'Media/Images/Backrounds/E.jpg', // rareshjalg
-            'Media/Images/Backrounds/Huldra2.jpg' // VeryRareHuldraImage2
+            'Media/Images/Backrounds/Huldra.jpg', 'Media/Images/Backrounds/E.jpg', 'Media/Images/Backrounds/Huldra2.jpg'
         ];
 
         let imageUrl;
@@ -78,9 +114,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
-        }).catch(error => console.error("Error fetching project progress: ", error));
+            systemHealth.progress = 'ok';
+        }).catch(error => {
+            console.error("Error fetching project progress: ", error);
+            systemHealth.progress = 'error';
+        }).finally(() => {
+            updateSystemStatusMessage();
+        });
     }
-
 
     // --- Fetch Logs for Project Pages ---
     function fetchProjectLogs(projectId) {
@@ -88,22 +129,31 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!logContainer) return;
         db.collection('project-logs').where('projectId', '==', projectId).get()
             .then(querySnapshot => {
-                logContainer.innerHTML = ''; // Clear loading message
+                logContainer.innerHTML = '';
                 if (querySnapshot.empty) {
-                    logContainer.innerHTML = '<p>Ingen prosjektlogger enda. Kom tilbake snart!</p>';
+                    logContainer.innerHTML = '<p>No project logs yet. Check back soon!</p>';
                     return;
                 }
-                querySnapshot.forEach(doc => {
-                    const log = doc.data();
+                
+                const logs = [];
+                querySnapshot.forEach(doc => logs.push(doc.data()));
+                logs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                logs.forEach(log => {
                     const logCard = document.createElement('div');
                     logCard.className = 'log-card fade-in';
                     logCard.innerHTML = `<h3>${log.title}</h3><p>${log.content.replace(/\n/g, '<br>')}</p>`;
                     logContainer.appendChild(logCard);
                 });
+
                 observeFadeInElements();
+                systemHealth.logs = 'ok';
             }).catch(error => {
                 console.error("Error fetching project logs: ", error);
-                logContainer.innerHTML = '<p>Kunne ikke laste prosjektlogger.</p>';
+                logContainer.innerHTML = '<p>Could not load project logs.</p>';
+                systemHealth.logs = 'error';
+            }).finally(() => {
+                updateSystemStatusMessage();
             });
     }
 
@@ -117,10 +167,15 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(querySnapshot => {
                 if (photoGrid) photoGrid.innerHTML = '';
                 if (videoGrid) videoGrid.innerHTML = '';
+                
+                const mediaItems = [];
+                querySnapshot.forEach(doc => mediaItems.push(doc.data()));
+                mediaItems.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
                 let photosFound = false;
                 let videosFound = false;
-                querySnapshot.forEach(doc => {
-                    const media = doc.data();
+
+                mediaItems.forEach(media => {
                     if (media.type === 'image' && photoGrid) {
                         photosFound = true;
                         const item = document.createElement('div');
@@ -135,15 +190,42 @@ document.addEventListener('DOMContentLoaded', function() {
                         videoGrid.appendChild(item);
                     }
                 });
-                if (photoGrid && !photosFound) photoGrid.innerHTML = '<div class="placeholder-card"><p>Ingen bilder lastet opp enda.</p></div>';
-                if (videoGrid && !videosFound) videoGrid.innerHTML = '<div class="placeholder-card"><p>Ingen videoer lastet opp enda.</p></div>';
+
+                if (photoGrid && !photosFound) photoGrid.innerHTML = '<div class="placeholder-card"><p>No photos uploaded yet.</p></div>';
+                if (videoGrid && !videosFound) videoGrid.innerHTML = '<div class="placeholder-card"><p>No videos uploaded yet.</p></div>';
+                
                 initializeModal();
                 observeFadeInElements();
+                systemHealth.media = 'ok';
             }).catch(error => {
                 console.error("Error fetching media: ", error);
-                if (photoGrid) photoGrid.innerHTML = '<div class="placeholder-card"><p>Kunne ikke laste bilder.</p></div>';
-                if (videoGrid) videoGrid.innerHTML = '<div class="placeholder-card"><p>Kunne ikke laste videoer.</p></div>';
+                if (photoGrid) photoGrid.innerHTML = '<div class="placeholder-card"><p>Could not load photos.</p></div>';
+                if (videoGrid) videoGrid.innerHTML = '<div class="placeholder-card"><p>Could not load videos.</p></div>';
+                systemHealth.media = 'error';
+            }).finally(() => {
+                updateSystemStatusMessage();
             });
+    }
+
+    // --- Listen for Manual System Status updates from Firebase ---
+    function listenForSystemStatus() {
+        const statusElement = document.getElementById('system-status');
+        if (!statusElement) return;
+
+        db.collection('system_status').doc('main').onSnapshot(doc => {
+            if (doc.exists) {
+                const data = doc.data();
+                firebaseStatus.level = data.level || 'optimal';
+                firebaseStatus.customMessage = data.customMessage || null;
+            } else {
+                firebaseStatus.level = 'optimal';
+                firebaseStatus.customMessage = null;
+            }
+            updateSystemStatusMessage(); // Update the message based on new Firebase data
+        }, error => {
+            console.error("Error fetching system status: ", error);
+            statusElement.textContent = 'hull failure imminent! Abandon ship!';
+        });
     }
 
     // --- Secret Admin Button ---
@@ -201,6 +283,6 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchProjectData();
     observeFadeInElements();
     initializeModal();
+    listenForSystemStatus(); // Activate our new status listener!
 });
 
- // --- Initial Page Load ---
