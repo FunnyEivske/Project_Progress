@@ -4,67 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel | Anaru's Workshop</title>
+    <!-- Admin-specific styles are now in style.css -->
     <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            padding: 2rem;
-        }
-        .admin-container {
-            max-width: 800px;
-            margin: auto;
-        }
-        .form-section {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
-        }
-        h2 {
-            color: var(--accent-tech);
-        }
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-muted-color);
-        }
-        input, select, textarea, button {
-            width: 100%;
-            padding: 0.8rem;
-            margin-bottom: 1rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background-color: #1a1c1e;
-            color: var(--text-color);
-            font-size: 1rem;
-        }
-        button {
-            background-color: var(--accent-tech);
-            color: #1a1c1e;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        button:hover {
-            background-color: #00aaff;
-        }
-        #logout-button {
-            background-color: var(--accent-alastor);
-        }
-        .progress-control {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .progress-control input[type="range"] {
-            flex-grow: 1;
-        }
-        .progress-control input[type="number"] {
-            width: 80px;
-        }
-    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
+<!-- ADDED class="admin-page" to the body -->
+<body class="admin-page">
 
     <div class="admin-container">
         <header style="text-align: left;">
@@ -72,7 +18,7 @@
             <p class="subtitle" id="welcome-subtitle">Welcome back, Anaru! Let's get the workshop updated.</p>
         </header>
 
-        <!-- Login/Logout Section -->
+        <!-- Login/Logout Section (Full Width) -->
         <div id="auth-section" class="form-section">
             <h2>Authentication</h2>
             <div id="login-form">
@@ -91,55 +37,147 @@
         <!-- Content Management Section -->
         <div id="content-management" style="display: none;">
 
-            <!-- Update Progress Bar Section -->
-            <div class="form-section">
-                <h2>Update Project Progress</h2>
-                <form id="progress-form">
-                    <label for="progress-project-id">Select Project</label>
-                    <select id="progress-project-id" required>
-                        <!-- Options will be populated by JS -->
-                    </select>
-                    <label for="progress-value">Progress (%)</label>
-                    <div class="progress-control">
-                        <input type="range" id="progress-slider" min="0" max="100" value="0">
-                        <input type="number" id="progress-value" min="0" max="100" value="0">
+            <!-- NEW: Tab Navigation -->
+            <nav class="admin-tab-nav">
+                <button class="admin-tab-btn active" data-tab="dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </button>
+                <button class="admin-tab-btn" data-tab="create">
+                    <i class="fas fa-plus-circle"></i> Create Content
+                </button>
+                <button class="admin-tab-btn" data-tab="manage">
+                    <i class="fas fa-edit"></i> Manage Content
+                </button>
+            </nav>
+
+            <!-- NEW: Tab Content Panes -->
+            
+            <!-- Tab 1: Dashboard -->
+            <div id="tab-dashboard" class="admin-tab-content active">
+                <div class="admin-grid-container">
+                    <div class="admin-grid-col">
+                        <!-- Update Progress Bar Section -->
+                        <div class="form-section">
+                            <h2>Update Project Progress</h2>
+                            <form id="progress-form">
+                                <label for="progress-project-id">Select Project</label>
+                                <select id="progress-project-id" required>
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                                <label for="progress-value">Progress (%)</label>
+                                <div class="progress-control">
+                                    <input type="range" id="progress-slider" min="0" max="100" value="0">
+                                    <input type="number" id="progress-value" min="0" max="100" value="0">
+                                </div>
+                                <button type="submit">Update Progress</button>
+                            </form>
+                        </div>
                     </div>
-                    <button type="submit">Update Progress</button>
-                </form>
-            </div>
+                    <div class="admin-grid-col">
+                        <!-- Update System Status Section -->
+                        <div class="form-section">
+                            <h2>Update Site-Wide System Status</h2>
+                            <form id="status-form">
+                                <label for="status-level">System Level</label>
+                                <select id="status-level" required>
+                                    <option value="optimal">Optimal (All systems online.)</option>
+                                    <option value="warning">Warning (Some systems need attention.)</option>
+                                </select>
+                                
+                                <label for="status-message">Custom Message (Optional)</label>
+                                <input type="text" id="status-message" placeholder="e.g., Working on Helldiver suit!">
+                                <p style="font-size: 0.9rem; color: var(--text-muted-color); margin-top: -0.5rem; margin-bottom: 1rem;">
+                                    If set, this message will override the default "optimal/warning" text in the footer.
+                                </p>
+                                
+                                <button type="submit">Update Status</button>
+                                <button type="button" id="clear-status-message" style="background-color: var(--text-muted-color); margin-top: 0.5rem;">Clear Custom Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End Tab 1 -->
 
-            <!-- Add Project Log Section -->
-            <div class="form-section">
-                <h2>Add New Project Log</h2>
-                <form id="log-form">
-                    <label for="log-project-id">Select Project</label>
-                    <select id="log-project-id" required>
+            <!-- Tab 2: Create Content -->
+            <div id="tab-create" class="admin-tab-content">
+                <div class="admin-grid-container">
+                    <div class="admin-grid-col">
+                        <!-- Add Project Log Section -->
+                        <div class="form-section">
+                            <h2>Add New Project Log</h2>
+                            <form id="log-form">
+                                <label for="log-project-id">Select Project</label>
+                                <select id="log-project-id" required>
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                                <label for="log-date">Log Date (Leave blank for today)</label>
+                                <input type="date" id="log-date">
+                                
+                                <label for="log-title">Log Title</label>
+                                <input type="text" id="log-title" required>
+                                <label for="log-content">Log Content</label>
+                                <textarea id="log-content" rows="5" required></textarea>
+                                <button type="submit">Add Log</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="admin-grid-col">
+                        <!-- Upload Media Section -->
+                        <div class="form-section">
+                            <h2>Upload Media (Image/Video)</h2>
+                            <form id="media-form">
+                                <label for="media-project-id">Select Project</label>
+                                <select id="media-project-id" required>
+                                   <!-- Options will be populated by JS -->
+                                </select>
+                                <label for="media-file">Choose File</label>
+                                <input type="file" id="media-file" required>
+                                <label for="media-description">Description</label>
+                                <input type="text" id="media-description" required>
+                                <button type="submit">Upload Media</button>
+                                <p id="upload-progress" style="display:none;">Uploading: 0%</p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End Tab 2 -->
+
+            <!-- Tab 3: Manage Content -->
+            <div id="tab-manage" class="admin-tab-content">
+                <!-- Manage Existing Project Logs Section (Full Width) -->
+                <div class="form-section">
+                    <h2>Manage Existing Project Logs</h2>
+                    <label for="manage-logs-project-id">Select Project</label>
+                    <select id="manage-logs-project-id" required>
                         <!-- Options will be populated by JS -->
                     </select>
-                    <label for="log-title">Log Title</label>
-                    <input type="text" id="log-title" required>
-                    <label for="log-content">Log Content</label>
-                    <textarea id="log-content" rows="5" required></textarea>
-                    <button type="submit">Add Log</button>
-                </form>
-            </div>
+                    <button type="button" id="load-logs-button">Load Project Logs</button>
 
-            <!-- Upload Media Section -->
-            <div class="form-section">
-                <h2>Upload Media (Image/Video)</h2>
-                <form id="media-form">
-                    <label for="media-project-id">Select Project</label>
-                    <select id="media-project-id" required>
-                       <!-- Options will be populated by JS -->
+                    <div id="log-management-container" style="margin-top: 1.5rem;">
+                        <p id="log-load-status" style="color: var(--text-muted-color);">Select a project and click "Load" to see its logs.</p>
+                        <div class="log-management-grid" id="log-grid">
+                            <!-- Loaded logs will appear here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manage Existing Media Section (Full Width) -->
+                <div class="form-section">
+                    <h2>Manage Existing Media</h2>
+                    <label for="manage-project-id">Select Project</label>
+                    <select id="manage-project-id" required>
+                        <!-- Options will be populated by JS -->
                     </select>
-                    <label for="media-file">Choose File</label>
-                    <input type="file" id="media-file" required>
-                    <label for="media-description">Description</label>
-                    <input type="text" id="media-description" required>
-                    <button type="submit">Upload Media</button>
-                    <p id="upload-progress" style="display:none;">Uploading: 0%</p>
-                </form>
-            </div>
+                    <button type="button" id="load-media-button">Load Project Media</button>
+                    
+                    <div id="media-management-container" style="margin-top: 1.5rem;">
+                        <p id="media-load-status" style="color: var(--text-muted-color);">Select a project and click "Load" to see its media.</p>
+                        <div class="media-management-grid" id="media-grid">
+                            <!-- Loaded media will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End Tab 3 -->
 
         </div>
     </div>
@@ -157,226 +195,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const firebaseConfig = {
-                apiKey: "AIzaSyBQuF0P7leiyn3ddC1OfsElFyF6F9sZJzw",
-                authDomain: "panel-aurora.firebaseapp.com",
-                projectId: "panel-aurora",
-                storageBucket: "panel-aurora.appspot.com",
-                messagingSenderId: "479594137457",
-                appId: "1:479594137457:web:f3bae0817900e3126218d0"
-            };
-
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            const auth = firebase.auth();
-            const db = firebase.firestore();
-            const storage = firebase.storage();
-
-            const loginForm = document.getElementById('login-form');
-            const logoutSection = document.getElementById('logout-section');
-            const contentManagement = document.getElementById('content-management');
-            const userEmailSpan = document.getElementById('user-email');
-
-            const projects = [
-                { id: 'anaru', name: 'Anaru (OwlHarpy)' },
-                { id: 'aurora', name: 'Aurora' },
-                { id: 'dr-darling', name: 'Dr. Darling' },
-                { id: 'snufkin', name: 'Snufkin (Moomin)' },
-                { id: 'alastor', name: 'Alastor (Hazbin Hotel)' },
-                { id: 'helldiver', name: 'Helldiver EX-03' },
-                { id: 'nms-traveler', name: 'NMS Traveler' },
-                { id: 'alan-wake', name: 'Alan Wake 2' },
-                { id: 'project-v60-t', name: 'Project V60-T' },
-                { id: 'larp-armory', name: 'LARP Armory' },
-                { id: 'prop-electronics-lab', name: 'Prop & Electronics Lab' }
-            ];
-
-            function populateDropdowns() {
-                const selects = document.querySelectorAll('select');
-                let optionsHtml = '';
-                projects.forEach(p => {
-                    optionsHtml += `<option value="${p.id}">${p.name}</option>`;
-                });
-                selects.forEach(s => s.innerHTML = optionsHtml);
-            }
-            populateDropdowns();
-
-            // Auth state listener
-            auth.onAuthStateChanged(user => {
-                const welcomeSubtitle = document.getElementById('welcome-subtitle');
-                if (user) {
-                    // --- NEW: Multi-Tier Special Welcome Message Logic ---
-                    const randomNumber = Math.random();
-                    // Set a 2% chance for the super rare message
-                    if (randomNumber < 0.02) { 
-                        welcomeSubtitle.textContent = "You are the best captain on the planet, I'm not even squiddin";
-                        document.getElementById('login-sound-rare').play().catch(e => console.error("Audio play failed.", e));
-                    // Set a 15% chance for the common special message
-                    } else if (randomNumber < 0.17) { // 0.02 + 0.15 = 0.17
-                        welcomeSubtitle.textContent = "Welcome back, Anaru! Let's get the workshop updated.";
-                        document.getElementById('login-sound-common').play().catch(e => console.error("Audio play failed.", e));
-                    } else {
-                        welcomeSubtitle.textContent = "Welcome back, Anaru! Let's get the workshop updated.";
-                    }
-                    
-                    loginForm.style.display = 'none';
-                    logoutSection.style.display = 'block';
-                    contentManagement.style.display = 'block';
-                    userEmailSpan.textContent = user.email;
-                    fetchCurrentProgress(document.getElementById('progress-project-id').value);
-                } else {
-                    loginForm.style.display = 'block';
-                    logoutSection.style.display = 'none';
-                    contentManagement.style.display = 'none';
-                    // Reset welcome text on logout
-                    welcomeSubtitle.textContent = "Welcome back, Anaru! Let's get the workshop updated.";
-                }
-            });
-
-            // Login
-            document.getElementById('login-button').addEventListener('click', () => {
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                auth.signInWithEmailAndPassword(email, password)
-                    .catch(error => alert('Login Failed: ' + error.message));
-            });
-
-            // Logout with new sound logic
-            document.getElementById('logout-button').addEventListener('click', () => {
-                const randomNumber = Math.random();
-                let soundPlayed = false;
-
-                // 2% chance for rare logout sound
-                if (randomNumber < 0.02) {
-                    soundPlayed = true;
-                    document.getElementById('logout-sound-rare').play().catch(e => console.error("Audio play failed.", e));
-                // 15% chance for common logout sound
-                } else if (randomNumber < 0.17) {
-                    soundPlayed = true;
-                    document.getElementById('logout-sound-common').play().catch(e => console.error("Audio play failed.", e));
-                }
-
-                // If a sound was played, wait a moment before signing out. Otherwise, sign out instantly.
-                if (soundPlayed) {
-                    setTimeout(() => auth.signOut(), 500); // Wait 500ms for sound to play
-                } else {
-                    auth.signOut();
-                }
-            });
-
-            // Add Project Log
-            document.getElementById('log-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const projectId = document.getElementById('log-project-id').value;
-                const title = document.getElementById('log-title').value;
-                const content = document.getElementById('log-content').value;
-                
-                db.collection('project-logs').add({
-                    projectId,
-                    title,
-                    content,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(() => {
-                    alert('Log added successfully!');
-                    e.target.reset();
-                }).catch(error => alert('Error adding log: ' + error.message));
-            });
-
-            // Upload Media
-            document.getElementById('media-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const projectId = document.getElementById('media-project-id').value;
-                const file = document.getElementById('media-file').files[0];
-                const description = document.getElementById('media-description').value;
-                const progressP = document.getElementById('upload-progress');
-
-                if (!file) {
-                    alert('Please select a file to upload.');
-                    return;
-                }
-
-                const fileType = file.type.split('/')[0];
-                const storageRef = storage.ref(`${projectId}/${Date.now()}_${file.name}`);
-                const uploadTask = storageRef.put(file);
-
-                uploadTask.on('state_changed', 
-                    (snapshot) => {
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        progressP.style.display = 'block';
-                        progressP.textContent = `Uploading: ${Math.round(progress)}%`;
-                    }, 
-                    (error) => {
-                        alert('Upload failed: ' + error.message);
-                        progressP.style.display = 'none';
-                    }, 
-                    () => {
-                        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                            db.collection('project-media').add({
-                                projectId,
-                                url: downloadURL,
-                                description,
-                                type: fileType,
-                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                            }).then(() => {
-                                alert('Media uploaded successfully!');
-                                e.target.reset();
-                                progressP.style.display = 'none';
-                            });
-                        });
-                    }
-                );
-            });
-
-             // --- Progress Bar Section Logic ---
-            const progressProjectIdSelect = document.getElementById('progress-project-id');
-            const progressSlider = document.getElementById('progress-slider');
-            const progressValueInput = document.getElementById('progress-value');
-            
-            // Sync slider and number input
-            progressSlider.addEventListener('input', () => progressValueInput.value = progressSlider.value);
-            progressValueInput.addEventListener('input', () => progressSlider.value = progressValueInput.value);
-
-            // Fetch current progress when dropdown changes
-            progressProjectIdSelect.addEventListener('change', (e) => {
-                fetchCurrentProgress(e.target.value);
-            });
-
-            function fetchCurrentProgress(projectId) {
-                db.collection('project-progress').doc(projectId).get().then(doc => {
-                    if (doc.exists) {
-                        const progress = doc.data().progress || 0;
-                        progressSlider.value = progress;
-                        progressValueInput.value = progress;
-                    } else {
-                        // If no progress is saved yet, reset to 0
-                        progressSlider.value = 0;
-                        progressValueInput.value = 0;
-                    }
-                }).catch(error => {
-                    console.error("Error fetching current progress:", error);
-                    // Reset to 0 on error
-                    progressSlider.value = 0;
-                    progressValueInput.value = 0;
-                });
-            }
-
-            // Handle form submission to update progress
-            document.getElementById('progress-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const projectId = progressProjectIdSelect.value;
-                const progress = parseInt(progressValueInput.value, 10);
-
-                db.collection('project-progress').doc(projectId).set({
-                    progress: progress
-                }).then(() => {
-                    alert(`Progress for ${projectId} updated to ${progress}%!`);
-                }).catch(error => alert('Error updating progress: ' + error.message));
-            });
-        });
-    </script>
+    <!-- CHANGED admin.js to script.js -->
+    <script src="script.js" defer></script>
 </body>
 </html>
 
