@@ -378,6 +378,132 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('project-form-container').style.display = 'none';
             loadAdminProjects();
         });
+
+        // Logs & Media Management
+        const globalProjectSelect = document.getElementById('global-project-select');
+        if (globalProjectSelect) {
+            globalProjectSelect.addEventListener('change', (e) => {
+                const projId = e.target.value;
+                const content = document.getElementById('logs-media-content');
+                if (!projId) {
+                    content.style.display = 'none';
+                    return;
+                }
+                content.style.display = 'block';
+                loadAdminLogs(projId);
+                loadAdminMedia(projId);
+            });
+        }
+
+        const logForm = document.getElementById('log-form');
+        if (logForm) {
+            logForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const projId = document.getElementById('global-project-select').value;
+                if(!projId) return alert("Select a project first");
+                await db.collection('project-logs').add({
+                    projectId: projId,
+                    title: document.getElementById('log-title').value,
+                    date: document.getElementById('log-date').value,
+                    content: document.getElementById('log-content').value,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                e.target.reset();
+                loadAdminLogs(projId);
+            });
+        }
+
+        const mediaForm = document.getElementById('media-form');
+        if (mediaForm) {
+            mediaForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const projId = document.getElementById('global-project-select').value;
+                if(!projId) return alert("Select a project first");
+                const file = document.getElementById('media-file').files[0];
+                if(!file) return alert("Choose a file");
+                
+                const p = document.getElementById('upload-progress');
+                p.style.display = 'block';
+                p.textContent = "Uploading...";
+                
+                const ref = storage.ref('projects/' + projId + '/' + Date.now() + '_' + file.name);
+                await ref.put(file);
+                const url = await ref.getDownloadURL();
+                
+                await db.collection('project-media').add({
+                    projectId: projId,
+                    url: url,
+                    type: file.type.startsWith('video') ? 'video' : 'image',
+                    description: document.getElementById('media-description').value,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                p.style.display = 'none';
+                e.target.reset();
+                loadAdminMedia(projId);
+            });
+        }
+
+        // Progress Controls
+        const progressSlider = document.getElementById('progress-slider');
+        const progressValue = document.getElementById('progress-value');
+        if (progressSlider && progressValue) {
+            progressSlider.addEventListener('input', e => progressValue.value = e.target.value);
+            progressValue.addEventListener('input', e => progressSlider.value = e.target.value);
+            
+            document.getElementById('progress-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const pid = document.getElementById('progress-project-id').value;
+                if(!pid) return alert('Select project');
+                await db.collection('projects').doc(pid).update({ progress: parseInt(progressValue.value) });
+                alert('Progress updated!');
+            });
+        }
+
+        // System Status Controls
+        const statusForm = document.getElementById('status-form');
+        if (statusForm) {
+            statusForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await db.collection('system_status').doc('main').set({
+                    level: document.getElementById('status-level').value,
+                    customMessage: document.getElementById('status-message').value,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                alert('Status updated!');
+                updateFooterStatus();
+            });
+            document.getElementById('clear-status-message').addEventListener('click', async () => {
+                document.getElementById('status-message').value = '';
+                document.getElementById('status-level').value = 'optimal';
+            });
+        }
+    }
+
+    function loadAdminLogs(projId) {
+        const grid = document.getElementById('log-grid');
+        db.collection('project-logs').where('projectId', '==', projId).get().then(snap => {
+            grid.innerHTML = '';
+            if (snap.empty) { grid.innerHTML = '<p>No logs found.</p>'; return; }
+            let logs = [];
+            snap.forEach(doc => logs.push({id: doc.id, ...doc.data()}));
+            logs.sort((a,b) => (b.date || '') > (a.date || '') ? 1 : -1);
+            logs.forEach(log => {
+                grid.innerHTML += `<div class="log-card"><p style="margin:0"><strong>${log.title}</strong> <span style="font-size:0.8rem; opacity:0.6">${log.date || ''}</span></p><p style="margin:0.5rem 0 0 0; font-size:0.9rem">${log.content}</p></div>`;
+            });
+        });
+    }
+
+    function loadAdminMedia(projId) {
+        const grid = document.getElementById('media-grid');
+        db.collection('project-media').where('projectId', '==', projId).get().then(snap => {
+            grid.innerHTML = '';
+            if (snap.empty) { grid.innerHTML = '<p>No media found.</p>'; return; }
+            snap.forEach(doc => {
+                const m = doc.data();
+                grid.innerHTML += `<div class="log-card" style="display:flex; justify-content:space-between; align-items:center;"><p style="margin:0; font-size:0.9rem">${m.description}</p><a href="${m.url}" target="_blank" class="secondary-btn" style="padding:0.25rem 0.5rem">View File</a></div>`;
+            });
+        });
     }
 
     function loadAdminProjects() {
