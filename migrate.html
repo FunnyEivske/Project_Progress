@@ -3,12 +3,21 @@
 <head>
     <title>Migrate Projects</title>
 </head>
-<body>
-    <h1>Migrating Projects...</h1>
-    <div id="status">Wait...</div>
+<body style="font-family: sans-serif; padding: 2rem;">
+    <h1>Migrate Projects to Database</h1>
+    <p>You must log in with your account to authorize the migration.</p>
+    
+    <div id="login-section">
+        <input type="email" id="email" placeholder="Your Email" style="padding: 0.5rem; margin-bottom: 0.5rem;"><br>
+        <input type="password" id="password" placeholder="Password" style="padding: 0.5rem; margin-bottom: 0.5rem;"><br>
+        <button onclick="loginAndMigrate()" style="padding: 0.5rem 1rem;">Login & Migrate</button>
+    </div>
+
+    <div id="status" style="margin-top: 1rem; font-weight: bold;"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBQuF0P7leiyn3ddC1OfsElFyF6F9sZJzw",
@@ -20,6 +29,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
 
         const projectsToMigrate = [
             { id: 'anaru', category: 'Cosplay Creations', name: 'Anaru (OwlHarpy)', description: 'The one project that will never be finished. Currently on feather upgrade v7.3.', tags: ['OC Design', 'Crafting'] },
@@ -35,8 +45,22 @@
             { id: 'prop-electronics-lab', category: 'Workshop Projects', name: 'Prop & Electronics Lab', description: 'Bringing props to life with 3D printing, custom wiring, and programmable LEDs.', tags: ['3D Printing', 'Soldering', 'Arduino'] }
         ];
 
-        async function migrate() {
+        async function loginAndMigrate() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const statusEl = document.getElementById('status');
+
+            if (!email || !password) {
+                statusEl.innerText = "Please enter email and password.";
+                return;
+            }
+
+            statusEl.innerText = "Logging in...";
             try {
+                await auth.signInWithEmailAndPassword(email, password);
+                document.getElementById('login-section').style.display = 'none';
+                
+                statusEl.innerText = "Logged in successfully. Migrating...";
                 for (const p of projectsToMigrate) {
                     await db.collection('projects').doc(p.id).set({
                         name: p.name,
@@ -47,14 +71,12 @@
                     });
                     console.log("Migrated", p.name);
                 }
-                document.getElementById('status').innerText = "Migration Complete! You can close this and delete migrate.html.";
+                statusEl.innerText = "Migration Complete! You can close this page and delete migrate.html.";
             } catch (error) {
-                console.error("Migration failed:", error);
-                document.getElementById('status').innerText = "Error: " + error.message;
+                console.error(error);
+                statusEl.innerText = "Error: " + error.message;
             }
         }
-
-        migrate();
     </script>
 </body>
 </html>
