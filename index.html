@@ -38,18 +38,30 @@
             </section>
     
             <section class="projects-section">
-                <h2>Cosplay Creations</h2>
-                <div class="project-grid">
-                    <!-- Loaded dynamically via script.js -->
-                    <p style="color: var(--text-muted-color);">Loading projects...</p>
+                <div class="section-header">
+                    <h2>Cosplay Creations</h2>
+                    <a href="all-projects.html?category=cosplay" class="see-all-btn">See All &rarr;</a>
+                </div>
+                <div class="carousel-container">
+                    <button class="carousel-btn left" onclick="scrollCarousel('cosplay-track', -1)"><i class="fas fa-chevron-left"></i></button>
+                    <div class="carousel-track" id="cosplay-track">
+                        <p style="color: var(--text-muted-color);">Loading projects...</p>
+                    </div>
+                    <button class="carousel-btn right" onclick="scrollCarousel('cosplay-track', 1)"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </section>
     
             <section class="projects-section">
-                <h2>Workshop Projects</h2>
-                <div class="project-grid">
-                    <!-- Loaded dynamically via script.js -->
-                    <p style="color: var(--text-muted-color);">Loading projects...</p>
+                <div class="section-header">
+                    <h2>Workshop Projects</h2>
+                    <a href="all-projects.html?category=workshop" class="see-all-btn">See All &rarr;</a>
+                </div>
+                <div class="carousel-container">
+                    <button class="carousel-btn left" onclick="scrollCarousel('workshop-track', -1)"><i class="fas fa-chevron-left"></i></button>
+                    <div class="carousel-track" id="workshop-track">
+                        <p style="color: var(--text-muted-color);">Loading projects...</p>
+                    </div>
+                    <button class="carousel-btn right" onclick="scrollCarousel('workshop-track', 1)"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </section>
             

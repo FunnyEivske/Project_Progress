@@ -37,8 +37,8 @@ body {
 }
 
 .background-wrapper {
+    background: radial-gradient(circle at top left, #2e1a3b 0%, #1a1c1e 50%, #112a32 100%);
     background-size: cover;
-    background-position: center center;
     background-attachment: fixed;
     padding: 3rem 1rem;
     min-height: 100vh;
@@ -212,6 +212,77 @@ h2 {
     margin: 4px;
     font-size: 0.8rem;
     border-radius: 20px;
+}
+
+/* Carousels */
+.carousel-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    scrollbar-width: none;
+    width: 100%;
+}
+.carousel-track::-webkit-scrollbar {
+    display: none;
+}
+.carousel-track > a {
+    scroll-snap-align: start;
+    flex: 0 0 calc(33.333% - 1rem); /* Default to 3 visible */
+    min-width: 300px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+}
+.carousel-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s;
+}
+.carousel-btn:hover {
+    background: var(--accent-tech);
+    color: #1a1c1e;
+}
+.carousel-btn.left { left: -24px; }
+.carousel-btn.right { right: -24px; }
+
+/* See All Button */
+.see-all-btn {
+    font-size: 1rem;
+    color: var(--accent-tech);
+    text-decoration: none;
+    font-weight: bold;
+}
+.see-all-btn:hover {
+    text-decoration: underline;
+}
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.section-header h2 {
+    margin-bottom: 0;
 }
 
 /* Nav & Generic Buttons */

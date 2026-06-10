@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Projects | Anaru's Workshop</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="all-projects-page">
+
+    <div class="background-wrapper">
+        <div class="container">
+            
+            <nav class="project-nav">
+                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            </nav>
+
+            <header style="margin-bottom: 2rem; padding: 1.5rem;">
+                <h1 id="page-title">All Projects</h1>
+                <p class="subtitle">A complete archive of everything I've worked on.</p>
+            </header>
+    
+            <section class="projects-section">
+                <div class="project-grid" id="all-projects-grid">
+                    <p style="color: var(--text-muted-color);">Loading projects...</p>
+                </div>
+            </section>
+            
+            <footer>
+                <p>&copy; <span id="current-year"></span> Anaru's Workshop.</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    
+    <!-- Custom Script -->
+    <script src="script.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('all-projects-grid');
+            if(!grid) return;
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryFilter = urlParams.get('category'); // 'cosplay' or 'workshop'
+            
+            if (categoryFilter === 'cosplay') document.getElementById('page-title').textContent = "All Cosplay Creations";
+            if (categoryFilter === 'workshop') document.getElementById('page-title').textContent = "All Workshop Projects";
+
+            const db = firebase.firestore();
+            db.collection('projects').get().then(snapshot => {
+                grid.innerHTML = '';
+                let projects = [];
+                snapshot.forEach(doc => projects.push({id: doc.id, ...doc.data()}));
+                
+                // Sort newest first
+                projects.sort((a,b) => {
+                    const ta = a.timestamp ? a.timestamp.seconds : 0;
+                    const tb = b.timestamp ? b.timestamp.seconds : 0;
+                    return tb - ta;
+                });
+
+                projects.forEach(p => {
+                    // Apply filter if it exists
+                    if (categoryFilter === 'cosplay' && p.category !== 'Cosplay Creations') return;
+                    if (categoryFilter === 'workshop' && p.category !== 'Workshop Projects') return;
+
+                    const docId = p.id;
+                    grid.innerHTML += `
+                        <a href="project.html?id=${docId}">
+                            <div class="project-card fade-in">
+                                <h3>${p.name} ${p.promoted ? '<i class="fas fa-star" style="color:var(--accent-helldiver); font-size:1rem;" title="Promoted"></i>' : ''}</h3>
+                                <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.5rem; margin-top: -5px;">${p.category}</p>
+                                <p>${p.description}</p>
+                                <div class="progress-bar" id="progress-${docId}"><div class="progress-fill" style="width: ${p.progress || 0}%"></div></div>
+                                <div class="skill-tags">
+                                    ${(p.tags || []).map(t => `<span>${t}</span>`).join('')}
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                });
+
+                if (grid.innerHTML === '') {
+                    grid.innerHTML = '<p>No projects found in this category.</p>';
+                }
+
+                // Trigger fade-in observer
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+            });
+        });
+    </script>
+</body>
+</html>

@@ -33,6 +33,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     observeFadeInElements();
 
+    window.scrollCarousel = function(trackId, direction) {
+        const track = document.getElementById(trackId);
+        if (track) {
+            const scrollAmount = track.clientWidth * 0.8;
+            track.scrollBy({ left: scrollAmount * direction, behavior: 'smooth' });
+        }
+    };
+
     // =========================================================================
     //  GLOBAL AUTH LISTENER
     // =========================================================================
@@ -158,14 +166,26 @@ document.addEventListener('DOMContentLoaded', function() {
         if (workshopContainer) workshopContainer.innerHTML = '';
 
         db.collection('projects').get().then(snapshot => {
-            snapshot.forEach(doc => {
-                const p = doc.data();
+            let projects = [];
+            snapshot.forEach(doc => projects.push({id: doc.id, ...doc.data()}));
+            
+            // Sort: promoted first, then by timestamp (newest first)
+            projects.sort((a,b) => {
+                if (a.promoted && !b.promoted) return -1;
+                if (!a.promoted && b.promoted) return 1;
+                const ta = a.timestamp ? a.timestamp.seconds : 0;
+                const tb = b.timestamp ? b.timestamp.seconds : 0;
+                return tb - ta;
+            });
+
+            projects.forEach(p => {
+                const docId = p.id;
                 const cardHtml = `
-                    <a href="project.html?id=${doc.id}">
+                    <a href="project.html?id=${docId}">
                         <div class="project-card fade-in">
-                            <h3>${p.name}</h3>
+                            <h3>${p.name} ${p.promoted ? '<i class="fas fa-star" style="color:var(--accent-helldiver); font-size:1rem;"></i>' : ''}</h3>
                             <p>${p.description}</p>
-                            <div class="progress-bar" id="progress-${doc.id}"><div class="progress-fill" style="width: ${p.progress || 0}%"></div></div>
+                            <div class="progress-bar" id="progress-${docId}"><div class="progress-fill" style="width: ${p.progress || 0}%"></div></div>
                             <div class="skill-tags">
                                 ${(p.tags || []).map(t => `<span>${t}</span>`).join('')}
                             </div>
@@ -349,6 +369,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 category: document.getElementById('crud-project-category').value,
                 description: document.getElementById('crud-project-desc').value,
                 tags: document.getElementById('crud-project-tags').value.split(',').map(t=>t.trim()),
+                promoted: document.getElementById('crud-project-promoted').checked,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
 
@@ -405,6 +426,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.getElementById('crud-project-category').value = p.category;
                         document.getElementById('crud-project-desc').value = p.description;
                         document.getElementById('crud-project-tags').value = (p.tags||[]).join(', ');
+                        document.getElementById('crud-project-promoted').checked = !!p.promoted;
                     }
                 });
             });
