@@ -48,19 +48,28 @@ document.addEventListener('DOMContentLoaded', function() {
         const wrapper = document.querySelector('.background-wrapper');
         if (!wrapper) return;
 
-        // Fetch one random image from project-media
-        const snap = await db.collection('project-media').where('type', '==', 'image').limit(20).get();
-        if (!snap.empty) {
-            const docs = snap.docs;
-            const randomDoc = docs[Math.floor(Math.random() * docs.length)].data();
-            wrapper.style.backgroundImage = `url('${randomDoc.url}')`;
-            wrapper.style.backgroundSize = 'cover';
-            wrapper.style.backgroundPosition = 'center';
-            wrapper.style.backgroundAttachment = 'fixed';
-            
-            // Make the wrapper darker so content is still readable
-            wrapper.style.boxShadow = 'inset 0 0 0 2000px rgba(0,0,0,0.7)';
-        }
+        // Fetch one random image from local Backgrounds folder
+        const backgrounds = [
+            "Media/Images/Backrounds/Anaru_Zee.png",
+            "Media/Images/Backrounds/Dog.jpg",
+            "Media/Images/Backrounds/E.jpg",
+            "Media/Images/Backrounds/Huldra.jpg",
+            "Media/Images/Backrounds/Huldra2.jpg",
+            "Media/Images/Backrounds/Landskap.jpg",
+            "Media/Images/Backrounds/Landskap1.jpg",
+            "Media/Images/Backrounds/Landskap2.jpg",
+            "Media/Images/Backrounds/Landskap3.jpg",
+            "Media/Images/Backrounds/Volvo.jpg"
+        ];
+        const randomImage = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+        
+        wrapper.style.backgroundImage = `url('${randomImage}')`;
+        wrapper.style.backgroundSize = 'cover';
+        wrapper.style.backgroundPosition = 'center';
+        wrapper.style.backgroundAttachment = 'fixed';
+        
+        // Make the wrapper darker so content is still readable
+        wrapper.style.boxShadow = 'inset 0 0 0 2000px rgba(0,0,0,0.7)';
     }
 
     // =========================================================================
