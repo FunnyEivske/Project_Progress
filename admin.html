@@ -45,9 +45,6 @@
                     <button class="admin-tab-btn" data-tab="users">
                         <i class="fas fa-users"></i> Users & Approvals
                     </button>
-                    <button class="admin-tab-btn" data-tab="logs">
-                        <i class="fas fa-stream"></i> Logs & Media
-                    </button>
                     <button class="admin-tab-btn" data-tab="system">
                         <i class="fas fa-server"></i> System Status
                     </button>
@@ -87,43 +84,7 @@
                             <button id="add-new-project-btn" class="primary-btn"><i class="fas fa-plus"></i> New Project</button>
                         </div>
 
-                        <!-- Form for New/Edit Project -->
-                        <div id="project-form-container" class="glass-panel" style="display: none; margin-top: 1rem;">
-                            <h3 id="project-form-title">Add New Project</h3>
-                            <form id="project-crud-form">
-                                <input type="hidden" id="crud-project-id">
-                                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                                    <div style="flex: 1;">
-                                        <label>Project ID (URL slug, no spaces)</label>
-                                        <input type="text" id="crud-project-slug" required>
-                                    </div>
-                                    <div style="flex: 1;">
-                                        <label>Project Name</label>
-                                        <input type="text" id="crud-project-name" required>
-                                    </div>
-                                    <div style="flex: 1;">
-                                        <label>Category</label>
-                                        <select id="crud-project-category" required>
-                                            <option value="Cosplay Creations">Cosplay Creations</option>
-                                            <option value="Workshop Projects">Workshop Projects</option>
-                                        </select>
-                                    </div>
-                                    <div style="flex: 1; display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
-                                        <input type="checkbox" id="crud-project-promoted" style="width: auto; margin-bottom: 0;">
-                                        <label for="crud-project-promoted">Promoted / Highlighted</label>
-                                    </div>
-                                </div>
-                                <label>Description</label>
-                                <textarea id="crud-project-desc" rows="3" required></textarea>
-                                <label>Tags (Comma separated)</label>
-                                <input type="text" id="crud-project-tags" placeholder="e.g. 3D Printing, Electronics">
-                                
-                                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                                    <button type="submit" class="primary-btn">Save Project</button>
-                                    <button type="button" id="cancel-project-btn" class="secondary-btn">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
+                        <!-- Form moved to modal -->
 
                         <div class="glass-panel" style="margin-top: 1rem;">
                             <div id="projects-list-grid" class="log-grid">
@@ -145,69 +106,7 @@
                         </div>
                     </div>
 
-                    <!-- Tab: Logs & Media (Combined) -->
-                    <div id="tab-logs" class="admin-tab-content">
-                        <div class="glass-panel header-panel">
-                            <h2>Logs & Media Management</h2>
-                            <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
-                                <select id="global-project-select" style="max-width: 300px;">
-                                    <option value="">Select a Project...</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div id="logs-media-content" style="display: none; margin-top: 1rem;">
-                            <div class="admin-grid-container">
-                                <!-- Logs Column -->
-                                <div class="admin-grid-col glass-panel">
-                                    <h3>Add Log</h3>
-                                    <form id="log-form">
-                                        <input type="text" id="log-title" placeholder="Log Title" required>
-                                        <input type="date" id="log-date">
-                                        <textarea id="log-content" rows="4" placeholder="Log details..." required></textarea>
-                                        <button type="submit" class="primary-btn">Add Log</button>
-                                    </form>
-                                    <hr style="margin: 1rem 0; opacity: 0.2;">
-                                    <h3>Existing Logs</h3>
-                                    <div id="log-grid" class="log-grid" style="max-height: 400px; overflow-y: auto;"></div>
-                                </div>
-
-                                <!-- Media Column -->
-                                <div class="admin-grid-col glass-panel">
-                                    <h3>Add Media</h3>
-                                    <form id="media-form">
-                                        <input type="file" id="media-file" required>
-                                        <input type="text" id="media-description" placeholder="Description" required>
-                                        <button type="submit" class="primary-btn">Upload</button>
-                                        <p id="upload-progress" style="display:none; font-size: 0.8rem; margin-top: 0.5rem;"></p>
-                                    </form>
-                                    <hr style="margin: 1rem 0; opacity: 0.2;">
-                                    <h3>Existing Media</h3>
-                                    <div id="media-grid" class="media-management-grid" style="max-height: 400px; overflow-y: auto;"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tab: System Status -->
-                    <div id="tab-system" class="admin-tab-content">
-                        <div class="glass-panel header-panel">
-                            <h2>System Controls</h2>
-                        </div>
                         <div class="admin-grid-container" style="margin-top: 1rem;">
-                            <div class="admin-grid-col glass-panel">
-                                <h3>Project Progress (%)</h3>
-                                <form id="progress-form">
-                                    <select id="progress-project-id" required>
-                                        <!-- Populated -->
-                                    </select>
-                                    <div class="progress-control">
-                                        <input type="range" id="progress-slider" min="0" max="100" value="0">
-                                        <input type="number" id="progress-value" min="0" max="100" value="0">
-                                    </div>
-                                    <button type="submit" class="primary-btn">Update Progress</button>
-                                </form>
-                            </div>
                             <div class="admin-grid-col glass-panel">
                                 <h3>Footer Status Message</h3>
                                 <form id="status-form">
@@ -234,6 +133,86 @@
     <audio id="login-sound-common" src="Media/sounds/On.oga" preload="auto"></audio>
     <audio id="logout-sound-common" src="Media/sounds/Off.oga" preload="auto"></audio>
     <audio id="logout-sound-rare" src="Media/sounds/Abandon.oga" preload="auto"></audio>
+
+    <!-- Project Edit Modal -->
+    <div id="project-modal-overlay" class="modal-overlay">
+        <div class="modal-content glass-panel" style="background: rgba(20,22,25,0.95); width: 95%; max-width: 1200px;">
+            <button class="close-modal-btn" id="close-project-modal">&times;</button>
+            <h2 id="project-form-title">Add/Edit Project</h2>
+            
+            <form id="project-crud-form">
+                <input type="hidden" id="crud-project-id">
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <div style="flex: 1;">
+                        <label>Project ID (URL slug, no spaces)</label>
+                        <input type="text" id="crud-project-slug" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Project Name</label>
+                        <input type="text" id="crud-project-name" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Category</label>
+                        <select id="crud-project-category" required>
+                            <option value="Cosplay Creations">Cosplay Creations</option>
+                            <option value="Workshop Projects">Workshop Projects</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1; display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
+                        <input type="checkbox" id="crud-project-promoted" style="width: auto; margin-bottom: 0;">
+                        <label for="crud-project-promoted">Promoted</label>
+                    </div>
+                </div>
+                <label>Description</label>
+                <textarea id="crud-project-desc" rows="2" required></textarea>
+                <label>Tags (Comma separated)</label>
+                <input type="text" id="crud-project-tags" placeholder="e.g. 3D Printing, Electronics">
+                
+                <div style="margin-top: 1rem;">
+                    <button type="submit" class="primary-btn">Save Project</button>
+                </div>
+            </form>
+
+            <div id="project-extra-controls" style="display: none; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div class="admin-grid-container">
+                    
+                    <div class="admin-grid-col glass-panel" style="background: rgba(255,255,255,0.05);">
+                        <h3>Progress (%)</h3>
+                        <form id="progress-form">
+                            <div class="progress-control">
+                                <input type="range" id="progress-slider" min="0" max="100" value="0">
+                                <input type="number" id="progress-value" min="0" max="100" value="0">
+                            </div>
+                            <button type="submit" class="primary-btn" style="width: 100%;">Update Progress</button>
+                        </form>
+                    </div>
+                    
+                    <div class="admin-grid-col glass-panel" style="background: rgba(255,255,255,0.05);">
+                        <h3>Logs</h3>
+                        <form id="log-form">
+                            <input type="text" id="log-title" placeholder="Log Title" required>
+                            <input type="date" id="log-date">
+                            <textarea id="log-content" rows="2" placeholder="Log details..." required></textarea>
+                            <button type="submit" class="primary-btn">Add Log</button>
+                        </form>
+                        <div id="log-grid" class="log-grid" style="max-height: 200px; overflow-y: auto; margin-top: 1rem;"></div>
+                    </div>
+                    
+                    <div class="admin-grid-col glass-panel" style="background: rgba(255,255,255,0.05);">
+                        <h3>Media</h3>
+                        <form id="media-form">
+                            <input type="file" id="media-file" required>
+                            <input type="text" id="media-description" placeholder="Description" required>
+                            <button type="submit" class="primary-btn">Upload</button>
+                            <p id="upload-progress" style="display:none; font-size: 0.8rem;"></p>
+                        </form>
+                        <div id="media-grid" class="media-management-grid" style="max-height: 200px; overflow-y: auto; margin-top: 1rem;"></div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>

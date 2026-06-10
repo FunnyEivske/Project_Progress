@@ -351,15 +351,26 @@ document.addEventListener('DOMContentLoaded', function() {
         loadAdminPrintRequests();
         loadAdminUsers();
 
-        // Project CRUD
-        document.getElementById('add-new-project-btn').addEventListener('click', () => {
-            document.getElementById('project-form-container').style.display = 'block';
-            document.getElementById('project-crud-form').reset();
-            document.getElementById('crud-project-id').value = '';
-        });
-        document.getElementById('cancel-project-btn').addEventListener('click', () => {
-            document.getElementById('project-form-container').style.display = 'none';
-        });
+        // Project CRUD Modal Logic
+        const modalOverlay = document.getElementById('project-modal-overlay');
+        const extraControls = document.getElementById('project-extra-controls');
+        const formTitle = document.getElementById('project-form-title');
+
+        const openModal = (isEdit = false) => {
+            modalOverlay.classList.add('active');
+            if (!isEdit) {
+                document.getElementById('project-crud-form').reset();
+                document.getElementById('crud-project-id').value = '';
+                document.getElementById('crud-project-slug').disabled = false;
+                formTitle.textContent = 'Add New Project';
+                extraControls.style.display = 'none';
+            }
+        };
+
+        const closeModal = () => modalOverlay.classList.remove('active');
+
+        document.getElementById('add-new-project-btn').addEventListener('click', () => openModal(false));
+        document.getElementById('close-project-modal').addEventListener('click', closeModal);
 
         document.getElementById('project-crud-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -375,32 +386,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
             await db.collection('projects').doc(id).set(data, {merge: true});
             alert('Project Saved!');
-            document.getElementById('project-form-container').style.display = 'none';
+            
+            // After saving, it becomes an "existing" project, so reveal the extra controls
+            document.getElementById('crud-project-id').value = id;
+            document.getElementById('crud-project-slug').disabled = true;
+            formTitle.textContent = 'Edit Project';
+            extraControls.style.display = 'block';
+            
+            // Reload grid but keep modal open
             loadAdminProjects();
         });
 
-        // Logs & Media Management
-        const globalProjectSelect = document.getElementById('global-project-select');
-        if (globalProjectSelect) {
-            globalProjectSelect.addEventListener('change', (e) => {
-                const projId = e.target.value;
-                const content = document.getElementById('logs-media-content');
-                if (!projId) {
-                    content.style.display = 'none';
-                    return;
-                }
-                content.style.display = 'block';
-                loadAdminLogs(projId);
-                loadAdminMedia(projId);
-            });
-        }
-
+        // Logs & Media Management (Now inside Modal)
         const logForm = document.getElementById('log-form');
         if (logForm) {
             logForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const projId = document.getElementById('global-project-select').value;
-                if(!projId) return alert("Select a project first");
+                const projId = document.getElementById('crud-project-id').value;
+                if(!projId) return alert("Save the project first");
                 await db.collection('project-logs').add({
                     projectId: projId,
                     title: document.getElementById('log-title').value,
@@ -417,8 +420,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (mediaForm) {
             mediaForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const projId = document.getElementById('global-project-select').value;
-                if(!projId) return alert("Select a project first");
+                const projId = document.getElementById('crud-project-id').value;
+                if(!projId) return alert("Save the project first");
                 const file = document.getElementById('media-file').files[0];
                 if(!file) return alert("Choose a file");
                 
@@ -444,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Progress Controls
+        // Progress Controls (Now inside Modal)
         const progressSlider = document.getElementById('progress-slider');
         const progressValue = document.getElementById('progress-value');
         if (progressSlider && progressValue) {
@@ -453,8 +456,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             document.getElementById('progress-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const pid = document.getElementById('progress-project-id').value;
-                if(!pid) return alert('Select project');
+                const pid = document.getElementById('crud-project-id').value;
+                if(!pid) return alert('Save the project first');
                 await db.collection('projects').doc(pid).update({ progress: parseInt(progressValue.value) });
                 alert('Progress updated!');
             });
@@ -513,14 +516,8 @@ document.addEventListener('DOMContentLoaded', function() {
         db.collection('projects').get().then(snap => {
             grid.innerHTML = '';
             
-            // Also populate dropdowns for Logs, Progress
-            const selects = ['global-project-select', 'progress-project-id'];
-            let options = '<option value="">Select a Project...</option>';
-            
             snap.forEach(doc => {
                 const p = doc.data();
-                options += `<option value="${doc.id}">${p.name}</option>`;
-                
                 grid.innerHTML += `
                     <div class="log-card" style="display:flex; justify-content:space-between; align-items:center;">
                         <div>
@@ -532,11 +529,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             });
 
-            selects.forEach(selId => {
-                const el = document.getElementById(selId);
-                if (el) el.innerHTML = options;
-            });
-
             // Attach edit listeners
             document.querySelectorAll('.edit-proj-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
@@ -544,15 +536,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     const doc = await db.collection('projects').doc(docId).get();
                     if(doc.exists) {
                         const p = doc.data();
-                        document.getElementById('project-form-container').style.display = 'block';
+                        
+                        document.getElementById('project-modal-overlay').classList.add('active');
+                        document.getElementById('project-form-title').textContent = 'Edit Project';
+                        document.getElementById('project-extra-controls').style.display = 'block';
+
                         document.getElementById('crud-project-id').value = docId;
                         document.getElementById('crud-project-slug').value = docId;
                         document.getElementById('crud-project-slug').disabled = true; // Can't change ID
-                        document.getElementById('crud-project-name').value = p.name;
-                        document.getElementById('crud-project-category').value = p.category;
-                        document.getElementById('crud-project-desc').value = p.description;
+                        document.getElementById('crud-project-name').value = p.name || '';
+                        document.getElementById('crud-project-category').value = p.category || '';
+                        document.getElementById('crud-project-desc').value = p.description || '';
                         document.getElementById('crud-project-tags').value = (p.tags||[]).join(', ');
                         document.getElementById('crud-project-promoted').checked = !!p.promoted;
+                        
+                        // Load extra controls
+                        if (p.progress) {
+                            document.getElementById('progress-slider').value = p.progress;
+                            document.getElementById('progress-value').value = p.progress;
+                        } else {
+                            document.getElementById('progress-slider').value = 0;
+                            document.getElementById('progress-value').value = 0;
+                        }
+                        
+                        loadAdminLogs(docId);
+                        loadAdminMedia(docId);
                     }
                 });
             });
