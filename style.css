@@ -60,6 +60,23 @@ body {
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
+/* Navbar Profile */
+.nav-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-weight: 700;
+}
+
+.nav-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent-tech);
+    box-shadow: 0 0 10px rgba(72, 209, 204, 0.4);
+}
+
 /* Header & Intro */
 header {
     text-align: center;
