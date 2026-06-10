@@ -56,13 +56,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             if (bodyClass.includes('print-requests-page')) {
                 document.getElementById('auth-warning').style.display = 'none';
-                document.getElementById('requests-content').style.display = 'block';
-                loadUserPrintRequests(user.uid);
+                if (currentUserProfile.role === 'pending') {
+                    document.getElementById('requests-content').innerHTML = '<div class="glass-panel" style="text-align:center;"><h2>Account Pending Approval</h2><p>An admin must approve your account before you can submit 3D print requests.</p></div>';
+                    document.getElementById('requests-content').style.display = 'block';
+                } else {
+                    document.getElementById('requests-content').style.display = 'block';
+                    loadUserPrintRequests(user.uid);
+                }
             }
             if (bodyClass.includes('admin-page')) {
                 if (currentUserProfile.role === 'admin') {
                     document.getElementById('auth-section').style.display = 'none';
-                    document.getElementById('content-management').style.display = 'block';
+                    document.getElementById('admin-dashboard-container').style.display = 'flex';
                     document.getElementById('user-email').textContent = user.email;
                     initAdminPanel();
                 } else {
@@ -85,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             if (bodyClass.includes('admin-page')) {
                 document.getElementById('auth-section').style.display = 'block';
-                document.getElementById('content-management').style.display = 'none';
+                document.getElementById('admin-dashboard-container').style.display = 'none';
             }
         }
     });
@@ -115,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Create user profile
                 await db.collection('users').doc(cred.user.uid).set({
                     email: email,
-                    role: 'regular' // Default
+                    role: 'pending' // Default
                 });
                 alert('Account created successfully!');
             } catch (error) {
@@ -324,6 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         loadAdminProjects();
         loadAdminPrintRequests();
+        loadAdminUsers();
 
         // Project CRUD
         document.getElementById('add-new-project-btn').addEventListener('click', () => {
@@ -451,6 +457,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 sel.addEventListener('change', (e) => {
                     const newStatus = e.target.value;
                     db.collection('print_requests').doc(e.target.dataset.id).update({status: newStatus});
+                });
+            });
+        });
+    }
+
+    function loadAdminUsers() {
+        const grid = document.getElementById('users-list-grid');
+        if (!grid) return;
+
+        db.collection('users').get().then(snap => {
+            grid.innerHTML = '';
+            if(snap.empty) { grid.innerHTML = '<p>No users found.</p>'; return; }
+
+            snap.forEach(doc => {
+                const u = doc.data();
+                const isPending = u.role === 'pending';
+                grid.innerHTML += `
+                    <div class="request-card ${isPending ? 'req-priority-admin' : ''}">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <h3 style="margin:0">${u.email}</h3>
+                                <p style="margin:0; font-size:0.9rem; color:var(--text-muted-color)">Current Role: <strong>${u.role}</strong></p>
+                            </div>
+                            <select class="user-role-select" data-id="${doc.id}" style="width:auto; margin:0">
+                                <option value="pending" ${u.role==='pending'?'selected':''}>Pending</option>
+                                <option value="regular" ${u.role==='regular'?'selected':''}>Regular</option>
+                                <option value="partner" ${u.role==='partner'?'selected':''}>Partner</option>
+                                <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.querySelectorAll('.user-role-select').forEach(sel => {
+                sel.addEventListener('change', (e) => {
+                    const newRole = e.target.value;
+                    db.collection('users').doc(e.target.dataset.id).update({role: newRole});
                 });
             });
         });

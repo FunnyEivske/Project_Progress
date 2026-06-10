@@ -12,7 +12,21 @@
 </head>
 <body class="admin-page">
     <div class="background-wrapper">
-        <div class="admin-dashboard-layout">
+        
+        <!-- Authentication Block (Visible on load) -->
+        <div id="auth-section" class="glass-panel" style="margin: 10vh auto; max-width: 400px; text-align: center;">
+            <h2><i class="fas fa-lock"></i> Admin Access</h2>
+            <p>Please log in with an administrator account.</p>
+            <div id="login-form" style="margin-top: 1.5rem;">
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button id="login-button" class="primary-btn" style="width: 100%;"><i class="fas fa-sign-in-alt"></i> Login</button>
+            </div>
+            <a href="index.html" class="secondary-btn" style="display: block; margin-top: 1rem; text-decoration: none;">Return to Home</a>
+        </div>
+
+        <!-- Admin Dashboard Container (Hidden until logged in) -->
+        <div id="admin-dashboard-container" class="admin-dashboard-layout" style="display: none;">
             
             <!-- Sidebar Navigation -->
             <aside class="admin-sidebar glass-panel">
@@ -27,6 +41,9 @@
                     </button>
                     <button class="admin-tab-btn" data-tab="projects">
                         <i class="fas fa-folder-open"></i> Projects
+                    </button>
+                    <button class="admin-tab-btn" data-tab="users">
+                        <i class="fas fa-users"></i> Users & Approvals
                     </button>
                     <button class="admin-tab-btn" data-tab="logs">
                         <i class="fas fa-stream"></i> Logs & Media
@@ -45,25 +62,13 @@
             <!-- Main Content Area -->
             <main class="admin-main-content">
                 
-                <!-- Authentication Block -->
-                <div id="auth-section" class="glass-panel" style="margin: auto; max-width: 400px; text-align: center;">
-                    <h2><i class="fas fa-lock"></i> Admin Access</h2>
-                    <p>Please log in with an administrator account.</p>
-                    <div id="login-form" style="margin-top: 1.5rem;">
-                        <input type="email" id="email" placeholder="Email" required>
-                        <input type="password" id="password" placeholder="Password" required>
-                        <button id="login-button" class="primary-btn" style="width: 100%;"><i class="fas fa-sign-in-alt"></i> Login</button>
-                    </div>
-                </div>
-
-                <!-- Dashboard Content (Hidden until logged in) -->
-                <div id="content-management" style="display: none; height: 100%;">
+                <div id="content-management" style="height: 100%;">
                     
                     <!-- Tab: Print Requests -->
                     <div id="tab-requests" class="admin-tab-content active">
                         <div class="glass-panel header-panel">
                             <h2>3D Print Requests Queue</h2>
-                            <p>Sorted automatically: Anaru -> Partner -> Regular Users</p>
+                            <p>Sorted automatically: Admin -> Partner -> Regular</p>
                         </div>
                         <div class="glass-panel" style="margin-top: 1rem;">
                             <div id="requests-grid" class="requests-grid">
@@ -119,6 +124,19 @@
                         <div class="glass-panel" style="margin-top: 1rem;">
                             <div id="projects-list-grid" class="log-grid">
                                 <!-- Loaded projects go here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NEW Tab: Users & Approvals -->
+                    <div id="tab-users" class="admin-tab-content">
+                        <div class="glass-panel header-panel">
+                            <h2>User Management</h2>
+                            <p>Approve pending accounts and manage roles (admin, partner, regular, pending).</p>
+                        </div>
+                        <div class="glass-panel" style="margin-top: 1rem;">
+                            <div id="users-list-grid" class="requests-grid">
+                                <p>Loading users...</p>
                             </div>
                         </div>
                     </div>
