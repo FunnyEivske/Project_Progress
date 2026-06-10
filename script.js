@@ -93,6 +93,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 link.style.border = 'none';
             });
 
+            // Update Main Index Page Header
+            if (bodyClass.includes('index-page')) {
+                const mainGreeting = document.getElementById('main-greeting');
+                const mainAvatar = document.getElementById('main-avatar');
+                if (mainGreeting && mainAvatar) {
+                    const name = currentUserProfile.displayName || user.email.split('@')[0];
+                    mainGreeting.textContent = `Hello! I'm ${name}!`;
+                    if (currentUserProfile.photoURL) {
+                        mainAvatar.src = currentUserProfile.photoURL;
+                    }
+                }
+            }
+
             // Apply custom background
             applyCustomBackground(currentUserProfile);
 
@@ -630,35 +643,42 @@ document.addEventListener('DOMContentLoaded', function() {
             // Attach edit listeners
             document.querySelectorAll('.edit-proj-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
-                    const docId = e.target.dataset.id;
-                    const doc = await db.collection('projects').doc(docId).get();
-                    if(doc.exists) {
-                        const p = doc.data();
-                        
-                        document.getElementById('project-modal-overlay').classList.add('active');
-                        document.getElementById('project-form-title').textContent = 'Edit Project';
-                        document.getElementById('project-extra-controls').style.display = 'block';
+                    try {
+                        const docId = e.currentTarget.dataset.id;
+                        const doc = await db.collection('projects').doc(docId).get();
+                        if(doc.exists) {
+                            const p = doc.data();
+                            
+                            document.getElementById('project-modal-overlay').classList.add('active');
+                            document.getElementById('project-form-title').textContent = 'Edit Project';
+                            document.getElementById('project-extra-controls').style.display = 'block';
 
-                        document.getElementById('crud-project-id').value = docId;
-                        document.getElementById('crud-project-slug').value = docId;
-                        document.getElementById('crud-project-slug').disabled = true; // Can't change ID
-                        document.getElementById('crud-project-name').value = p.name || '';
-                        document.getElementById('crud-project-category').value = p.category || '';
-                        document.getElementById('crud-project-desc').value = p.description || '';
-                        document.getElementById('crud-project-tags').value = (p.tags||[]).join(', ');
-                        document.getElementById('crud-project-promoted').checked = !!p.promoted;
-                        
-                        // Load extra controls
-                        if (p.progress) {
-                            document.getElementById('progress-slider').value = p.progress;
-                            document.getElementById('progress-value').value = p.progress;
+                            document.getElementById('crud-project-id').value = docId;
+                            document.getElementById('crud-project-slug').value = docId;
+                            document.getElementById('crud-project-slug').disabled = true; // Can't change ID
+                            document.getElementById('crud-project-name').value = p.name || '';
+                            document.getElementById('crud-project-category').value = p.category || '';
+                            document.getElementById('crud-project-desc').value = p.description || '';
+                            document.getElementById('crud-project-tags').value = (p.tags||[]).join(', ');
+                            document.getElementById('crud-project-promoted').checked = !!p.promoted;
+                            
+                            // Load extra controls
+                            if (p.progress) {
+                                document.getElementById('progress-slider').value = p.progress;
+                                document.getElementById('progress-value').value = p.progress;
+                            } else {
+                                document.getElementById('progress-slider').value = 0;
+                                document.getElementById('progress-value').value = 0;
+                            }
+                            
+                            loadAdminLogs(docId);
+                            loadAdminMedia(docId);
                         } else {
-                            document.getElementById('progress-slider').value = 0;
-                            document.getElementById('progress-value').value = 0;
+                            alert("Project not found!");
                         }
-                        
-                        loadAdminLogs(docId);
-                        loadAdminMedia(docId);
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error opening edit modal: " + err.message);
                     }
                 });
             });
