@@ -158,8 +158,8 @@ document.addEventListener('DOMContentLoaded', function() {
     //  INDEX PAGE (Dynamic Projects)
     // =========================================================================
     if (bodyClass.includes('index-page')) {
-        const cosplayContainer = document.querySelector('.projects-section:nth-of-type(1) .project-grid');
-        const workshopContainer = document.querySelector('.projects-section:nth-of-type(2) .project-grid');
+        const cosplayContainer = document.getElementById('cosplay-track');
+        const workshopContainer = document.getElementById('workshop-track');
 
         // Clear existing hardcoded ones if any
         if (cosplayContainer) cosplayContainer.innerHTML = '';
