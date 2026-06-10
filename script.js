@@ -1,21 +1,21 @@
+// --- Firebase Configuration ---
+const firebaseConfig = {
+    apiKey: "AIzaSyBQuF0P7leiyn3ddC1OfsElFyF6F9sZJzw",
+    authDomain: "panel-aurora.firebaseapp.com",
+    projectId: "panel-aurora",
+    storageBucket: "panel-aurora.appspot.com",
+    messagingSenderId: "479594137457",
+    appId: "1:479594137457:web:f3bae0817900e3126218d0"
+};
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.firestore();
+const auth = firebase.auth();
+const storage = firebase.storage();
+
 document.addEventListener('DOMContentLoaded', function() {
-
-    // --- Firebase Configuration ---
-    const firebaseConfig = {
-        apiKey: "AIzaSyBQuF0P7leiyn3ddC1OfsElFyF6F9sZJzw",
-        authDomain: "panel-aurora.firebaseapp.com",
-        projectId: "panel-aurora",
-        storageBucket: "panel-aurora.appspot.com",
-        messagingSenderId: "479594137457",
-        appId: "1:479594137457:web:f3bae0817900e3126218d0"
-    };
-
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.firestore();
-    const auth = firebase.auth();
-    const storage = firebase.storage();
 
     const bodyClass = document.body.className;
     let currentUserProfile = null; // Store user role
