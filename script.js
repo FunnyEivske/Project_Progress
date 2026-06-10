@@ -41,6 +41,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+    // Global Background Logic
+    async function applyCustomBackground(userProfile) {
+        if (!userProfile || !userProfile.useCustomBackgrounds) return;
+        
+        const wrapper = document.querySelector('.background-wrapper');
+        if (!wrapper) return;
+
+        // Fetch one random image from project-media
+        const snap = await db.collection('project-media').where('type', '==', 'image').limit(20).get();
+        if (!snap.empty) {
+            const docs = snap.docs;
+            const randomDoc = docs[Math.floor(Math.random() * docs.length)].data();
+            wrapper.style.backgroundImage = `url('${randomDoc.url}')`;
+            wrapper.style.backgroundSize = 'cover';
+            wrapper.style.backgroundPosition = 'center';
+            wrapper.style.backgroundAttachment = 'fixed';
+            
+            // Make the wrapper darker so content is still readable
+            wrapper.style.boxShadow = 'inset 0 0 0 2000px rgba(0,0,0,0.7)';
+        }
+    }
+
     // =========================================================================
     //  GLOBAL AUTH LISTENER
     // =========================================================================
@@ -54,13 +76,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentUserProfile = { role: 'regular' }; // Default fallback
             }
 
+            // Update Navbar Avatar
+            const navLoginLinks = document.querySelectorAll('#nav-login-link');
+            navLoginLinks.forEach(link => {
+                const name = currentUserProfile.displayName || user.email.split('@')[0];
+                const photo = currentUserProfile.photoURL || 'Media/Images/default-avatar.png';
+                link.innerHTML = `
+                    <div class="nav-profile">
+                        <img src="${photo}" class="nav-avatar" alt="Profile">
+                        <span>${name}</span>
+                    </div>
+                `;
+                link.href = 'login.html';
+                link.style.padding = '0';
+                link.style.background = 'transparent';
+                link.style.border = 'none';
+            });
+
+            // Apply custom background
+            applyCustomBackground(currentUserProfile);
+
             // Route-specific logic on login
             if (bodyClass.includes('login-page')) {
                 document.getElementById('auth-forms').style.display = 'block';
                 document.getElementById('login-form-container').style.display = 'none';
                 document.getElementById('register-form-container').style.display = 'none';
                 document.getElementById('logged-in-container').style.display = 'block';
-                document.getElementById('current-user-email').textContent = user.email;
+                
+                const name = currentUserProfile.displayName || user.email.split('@')[0];
+                document.getElementById('current-user-email').textContent = name;
+                document.getElementById('settings-display-name').value = currentUserProfile.displayName || '';
+                document.getElementById('settings-custom-bg').checked = !!currentUserProfile.useCustomBackgrounds;
+                if (currentUserProfile.photoURL) {
+                    document.getElementById('settings-avatar-preview').src = currentUserProfile.photoURL;
+                }
             }
             if (bodyClass.includes('print-requests-page')) {
                 document.getElementById('auth-warning').style.display = 'none';
@@ -147,6 +196,55 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Login Error: ' + error.message);
             }
         });
+
+        // Account Settings Submit
+        const settingsForm = document.getElementById('account-settings-form');
+        if (settingsForm) {
+            settingsForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const user = auth.currentUser;
+                if (!user) return;
+                
+                const btn = e.target.querySelector('button[type="submit"]');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                btn.disabled = true;
+
+                try {
+                    let photoURL = currentUserProfile.photoURL || null;
+                    const fileInput = document.getElementById('settings-photo');
+                    
+                    if (fileInput.files.length > 0) {
+                        const file = fileInput.files[0];
+                        const ref = storage.ref(`users/${user.uid}/profile_${Date.now()}`);
+                        await ref.put(file);
+                        photoURL = await ref.getDownloadURL();
+                    }
+
+                    const updates = {
+                        displayName: document.getElementById('settings-display-name').value,
+                        useCustomBackgrounds: document.getElementById('settings-custom-bg').checked,
+                        photoURL: photoURL
+                    };
+
+                    await db.collection('users').doc(user.uid).update(updates);
+                    
+                    // Update local state and UI
+                    currentUserProfile = { ...currentUserProfile, ...updates };
+                    if (photoURL) document.getElementById('settings-avatar-preview').src = photoURL;
+                    document.getElementById('current-user-email').textContent = updates.displayName || user.email.split('@')[0];
+                    applyCustomBackground(currentUserProfile);
+                    
+                    // Alert user
+                    alert('Settings Saved Successfully!');
+                } catch (err) {
+                    alert('Error saving settings: ' + err.message);
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
+        }
 
         // Logout
         document.getElementById('user-logout-btn').addEventListener('click', () => {

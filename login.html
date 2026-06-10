@@ -46,12 +46,36 @@
                     <p style="margin-top: 1rem; text-align: center;">Already have an account? <a href="#" id="show-login">Login here</a></p>
                 </div>
 
-                <div id="logged-in-container" style="display: none; text-align: center;">
-                    <h2>Welcome Back!</h2>
-                    <p>You are logged in as <span id="current-user-email"></span>.</p>
-                    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
-                        <a href="index.html" class="primary-btn" style="text-decoration: none;">Go to Home</a>
-                        <button id="user-logout-btn" class="secondary-btn">Logout</button>
+                <div id="logged-in-container" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <img id="settings-avatar-preview" src="Media/Images/default-avatar.png" alt="Profile" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-tech); margin-bottom: 1rem;">
+                        <h2>Welcome, <span id="current-user-email"></span>!</h2>
+                        <p style="color: var(--text-muted-color);">Manage your account settings below.</p>
+                    </div>
+
+                    <form id="account-settings-form">
+                        <label for="settings-display-name">Display Name</label>
+                        <input type="text" id="settings-display-name" placeholder="Your name...">
+
+                        <label for="settings-photo">Profile Picture</label>
+                        <input type="file" id="settings-photo" accept="image/*">
+                        
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; margin-bottom: 1.5rem; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 12px;">
+                            <input type="checkbox" id="settings-custom-bg" style="width: auto; margin: 0;">
+                            <div>
+                                <label for="settings-custom-bg" style="margin: 0; font-weight: bold;">Use Dynamic Backgrounds</label>
+                                <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted-color);">Show project images as the website background.</p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="primary-btn" style="width: 100%;"><i class="fas fa-save"></i> Save Settings</button>
+                    </form>
+
+                    <hr style="margin: 2rem 0; opacity: 0.2;">
+
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <a href="index.html" class="primary-btn" style="text-decoration: none; flex: 1; text-align: center;"><i class="fas fa-home"></i> Home</a>
+                        <button id="user-logout-btn" class="secondary-btn" style="flex: 1;"><i class="fas fa-sign-out-alt"></i> Logout</button>
                     </div>
                 </div>
             </div>
