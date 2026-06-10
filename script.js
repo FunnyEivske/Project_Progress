@@ -3,7 +3,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyBQuF0P7leiyn3ddC1OfsElFyF6F9sZJzw",
     authDomain: "panel-aurora.firebaseapp.com",
     projectId: "panel-aurora",
-    storageBucket: "panel-aurora.appspot.com",
+    storageBucket: "panel-aurora.firebasestorage.app",
     messagingSenderId: "479594137457",
     appId: "1:479594137457:web:f3bae0817900e3126218d0"
 };
