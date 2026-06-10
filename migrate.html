@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Migrate Projects</title>
+</head>
+<body>
+    <h1>Migrating Projects...</h1>
+    <div id="status">Wait...</div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQuF0P7leiyn3ddC1OfsElFyF6F9sZJzw",
+            authDomain: "panel-aurora.firebaseapp.com",
+            projectId: "panel-aurora",
+            storageBucket: "panel-aurora.appspot.com",
+            messagingSenderId: "479594137457",
+            appId: "1:479594137457:web:f3bae0817900e3126218d0"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const projectsToMigrate = [
+            { id: 'anaru', category: 'Cosplay Creations', name: 'Anaru (OwlHarpy)', description: 'The one project that will never be finished. Currently on feather upgrade v7.3.', tags: ['OC Design', 'Crafting'] },
+            { id: 'aurora', category: 'Cosplay Creations', name: 'Aurora', description: 'Luring the shyest, most whispering hulders from the depths of the forest.', tags: ['Prop Making', 'Sculpting'] },
+            { id: 'dr-darling', category: 'Cosplay Creations', name: 'Dr. Darling', description: '[REDACTED] This project is an OOP (Object of Power). Handle with care, Director.', tags: ['Prop Design', 'Research'] },
+            { id: 'snufkin', category: 'Cosplay Creations', name: 'Snufkin (Moomin)', description: "Gone fishin'. Might return to Moominvalley later, or maybe not. We'll see.", tags: ['Sewing', 'Weathering'] },
+            { id: 'alastor', category: 'Cosplay Creations', name: 'Alastor (Hazbin Hotel)', description: 'Stay tuned, folks! Perfecting the smile-to-chaos ratio for this radio demon.', tags: ['Tailoring', 'Prop Making'] },
+            { id: 'helldiver', category: 'Cosplay Creations', name: 'Helldiver EX-03', description: 'Dispensing managed democracy, one foam plate at a time. FOR LIBER-TEA!', tags: ['Foam Smithing', 'Electronics'] },
+            { id: 'nms-traveler', category: 'Cosplay Creations', name: 'NMS Traveler', description: 'Units received. Attempting to craft a multi-tool and analysis visor from EVA foam.', tags: ['Concept'] },
+            { id: 'alan-wake', category: 'Cosplay Creations', name: 'Alan Wake 2', description: "Currently stuck in the Dark Place, also known as 'the planning phase'. Send coffee.", tags: ['Concept', 'Thrift Finds'] },
+            { id: 'project-v60-t', category: 'Workshop Projects', name: 'Project V60-T', description: 'The big dream: Converting a Volvo V60 D6 into a full EV using a Tesla drivetrain.', tags: ['Research', 'Mechanical', 'Electrical'] },
+            { id: 'larp-armory', category: 'Workshop Projects', name: 'LARP Armory', description: 'Designing and crafting gear for LARP events. Getting ready for the big one in Quebec!', tags: ['Leatherworking', 'Foam Smithing'] },
+            { id: 'prop-electronics-lab', category: 'Workshop Projects', name: 'Prop & Electronics Lab', description: 'Bringing props to life with 3D printing, custom wiring, and programmable LEDs.', tags: ['3D Printing', 'Soldering', 'Arduino'] }
+        ];
+
+        async function migrate() {
+            try {
+                for (const p of projectsToMigrate) {
+                    await db.collection('projects').doc(p.id).set({
+                        name: p.name,
+                        description: p.description,
+                        category: p.category,
+                        tags: p.tags,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    console.log("Migrated", p.name);
+                }
+                document.getElementById('status').innerText = "Migration Complete! You can close this and delete migrate.html.";
+            } catch (error) {
+                console.error("Migration failed:", error);
+                document.getElementById('status').innerText = "Error: " + error.message;
+            }
+        }
+
+        migrate();
+    </script>
+</body>
+</html>

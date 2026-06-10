@@ -3,200 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel | Anaru's Workshop</title>
-    <!-- Admin-specific styles are now in style.css -->
+    <title>Admin Dashboard | Anaru's Workshop</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<!-- ADDED class="admin-page" to the body -->
 <body class="admin-page">
-
-    <div class="admin-container">
-        <header style="text-align: left;">
-            <h1>Admin Dashboard</h1>
-            <p class="subtitle" id="welcome-subtitle">Welcome back, Anaru! Let's get the workshop updated.</p>
-        </header>
-
-        <!-- Login/Logout Section (Full Width) -->
-        <div id="auth-section" class="form-section">
-            <h2>Authentication</h2>
-            <div id="login-form">
-                <label for="email">Email</label>
-                <input type="email" id="email" required>
-                <label for="password">Password</label>
-                <input type="password" id="password" required>
-                <button id="login-button">Login</button>
-            </div>
-            <div id="logout-section" style="display: none;">
-                <p>You are logged in. <span id="user-email"></span></p>
-                <button id="logout-button">Logout</button>
-            </div>
-        </div>
-        
-        <!-- Content Management Section -->
-        <div id="content-management" style="display: none;">
-
-            <!-- NEW: Tab Navigation -->
-            <nav class="admin-tab-nav">
-                <button class="admin-tab-btn active" data-tab="dashboard">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </button>
-                <button class="admin-tab-btn" data-tab="create">
-                    <i class="fas fa-plus-circle"></i> Create Content
-                </button>
-                <button class="admin-tab-btn" data-tab="manage">
-                    <i class="fas fa-edit"></i> Manage Content
-                </button>
-            </nav>
-
-            <!-- NEW: Tab Content Panes -->
+    <div class="background-wrapper">
+        <div class="admin-dashboard-layout">
             
-            <!-- Tab 1: Dashboard -->
-            <div id="tab-dashboard" class="admin-tab-content active">
-                <div class="admin-grid-container">
-                    <div class="admin-grid-col">
-                        <!-- Update Progress Bar Section -->
-                        <div class="form-section">
-                            <h2>Update Project Progress</h2>
-                            <form id="progress-form">
-                                <label for="progress-project-id">Select Project</label>
-                                <select id="progress-project-id" required>
-                                    <!-- Options will be populated by JS -->
-                                </select>
-                                <label for="progress-value">Progress (%)</label>
-                                <div class="progress-control">
-                                    <input type="range" id="progress-slider" min="0" max="100" value="0">
-                                    <input type="number" id="progress-value" min="0" max="100" value="0">
-                                </div>
-                                <button type="submit">Update Progress</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="admin-grid-col">
-                        <!-- Update System Status Section -->
-                        <div class="form-section">
-                            <h2>Update Site-Wide System Status</h2>
-                            <form id="status-form">
-                                <label for="status-level">System Level</label>
-                                <select id="status-level" required>
-                                    <option value="optimal">Optimal (All systems online.)</option>
-                                    <option value="warning">Warning (Some systems need attention.)</option>
-                                </select>
-                                
-                                <label for="status-message">Custom Message (Optional)</label>
-                                <input type="text" id="status-message" placeholder="e.g., Working on Helldiver suit!">
-                                <p style="font-size: 0.9rem; color: var(--text-muted-color); margin-top: -0.5rem; margin-bottom: 1rem;">
-                                    If set, this message will override the default "optimal/warning" text in the footer.
-                                </p>
-                                
-                                <button type="submit">Update Status</button>
-                                <button type="button" id="clear-status-message" style="background-color: var(--text-muted-color); margin-top: 0.5rem;">Clear Custom Message</button>
-                            </form>
-                        </div>
-                    </div>
+            <!-- Sidebar Navigation -->
+            <aside class="admin-sidebar glass-panel">
+                <div class="sidebar-header">
+                    <h2><i class="fas fa-cog"></i> Admin</h2>
+                    <p id="welcome-subtitle">Workspace Control</p>
                 </div>
-            </div> <!-- End Tab 1 -->
 
-            <!-- Tab 2: Create Content -->
-            <div id="tab-create" class="admin-tab-content">
-                <div class="admin-grid-container">
-                    <div class="admin-grid-col">
-                        <!-- Add Project Log Section -->
-                        <div class="form-section">
-                            <h2>Add New Project Log</h2>
-                            <form id="log-form">
-                                <label for="log-project-id">Select Project</label>
-                                <select id="log-project-id" required>
-                                    <!-- Options will be populated by JS -->
-                                </select>
-                                <label for="log-date">Log Date (Leave blank for today)</label>
-                                <input type="date" id="log-date">
-                                
-                                <label for="log-title">Log Title</label>
-                                <input type="text" id="log-title" required>
-                                <label for="log-content">Log Content</label>
-                                <textarea id="log-content" rows="5" required></textarea>
-                                <button type="submit">Add Log</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="admin-grid-col">
-                        <!-- Upload Media Section -->
-                        <div class="form-section">
-                            <h2>Upload Media (Image/Video)</h2>
-                            <form id="media-form">
-                                <label for="media-project-id">Select Project</label>
-                                <select id="media-project-id" required>
-                                   <!-- Options will be populated by JS -->
-                                </select>
-                                <label for="media-file">Choose File</label>
-                                <input type="file" id="media-file" required>
-                                <label for="media-description">Description</label>
-                                <input type="text" id="media-description" required>
-                                <button type="submit">Upload Media</button>
-                                <p id="upload-progress" style="display:none;">Uploading: 0%</p>
-                            </form>
-                        </div>
-                    </div>
+                <nav class="admin-tab-nav">
+                    <button class="admin-tab-btn active" data-tab="requests">
+                        <i class="fas fa-print"></i> Print Requests
+                    </button>
+                    <button class="admin-tab-btn" data-tab="projects">
+                        <i class="fas fa-folder-open"></i> Projects
+                    </button>
+                    <button class="admin-tab-btn" data-tab="logs">
+                        <i class="fas fa-stream"></i> Logs & Media
+                    </button>
+                    <button class="admin-tab-btn" data-tab="system">
+                        <i class="fas fa-server"></i> System Status
+                    </button>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <p id="user-email" style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 0.5rem; word-break: break-all;"></p>
+                    <button id="logout-button" class="secondary-btn" style="width: 100%;"><i class="fas fa-sign-out-alt"></i> Logout</button>
                 </div>
-            </div> <!-- End Tab 2 -->
+            </aside>
 
-            <!-- Tab 3: Manage Content -->
-            <div id="tab-manage" class="admin-tab-content">
-                <!-- Manage Existing Project Logs Section (Full Width) -->
-                <div class="form-section">
-                    <h2>Manage Existing Project Logs</h2>
-                    <label for="manage-logs-project-id">Select Project</label>
-                    <select id="manage-logs-project-id" required>
-                        <!-- Options will be populated by JS -->
-                    </select>
-                    <button type="button" id="load-logs-button">Load Project Logs</button>
-
-                    <div id="log-management-container" style="margin-top: 1.5rem;">
-                        <p id="log-load-status" style="color: var(--text-muted-color);">Select a project and click "Load" to see its logs.</p>
-                        <div class="log-management-grid" id="log-grid">
-                            <!-- Loaded logs will appear here -->
-                        </div>
+            <!-- Main Content Area -->
+            <main class="admin-main-content">
+                
+                <!-- Authentication Block -->
+                <div id="auth-section" class="glass-panel" style="margin: auto; max-width: 400px; text-align: center;">
+                    <h2><i class="fas fa-lock"></i> Admin Access</h2>
+                    <p>Please log in with an administrator account.</p>
+                    <div id="login-form" style="margin-top: 1.5rem;">
+                        <input type="email" id="email" placeholder="Email" required>
+                        <input type="password" id="password" placeholder="Password" required>
+                        <button id="login-button" class="primary-btn" style="width: 100%;"><i class="fas fa-sign-in-alt"></i> Login</button>
                     </div>
                 </div>
 
-                <!-- Manage Existing Media Section (Full Width) -->
-                <div class="form-section">
-                    <h2>Manage Existing Media</h2>
-                    <label for="manage-project-id">Select Project</label>
-                    <select id="manage-project-id" required>
-                        <!-- Options will be populated by JS -->
-                    </select>
-                    <button type="button" id="load-media-button">Load Project Media</button>
+                <!-- Dashboard Content (Hidden until logged in) -->
+                <div id="content-management" style="display: none; height: 100%;">
                     
-                    <div id="media-management-container" style="margin-top: 1.5rem;">
-                        <p id="media-load-status" style="color: var(--text-muted-color);">Select a project and click "Load" to see its media.</p>
-                        <div class="media-management-grid" id="media-grid">
-                            <!-- Loaded media will appear here -->
+                    <!-- Tab: Print Requests -->
+                    <div id="tab-requests" class="admin-tab-content active">
+                        <div class="glass-panel header-panel">
+                            <h2>3D Print Requests Queue</h2>
+                            <p>Sorted automatically: Anaru -> Partner -> Regular Users</p>
+                        </div>
+                        <div class="glass-panel" style="margin-top: 1rem;">
+                            <div id="requests-grid" class="requests-grid">
+                                <p>Loading requests...</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div> <!-- End Tab 3 -->
 
+                    <!-- Tab: Projects Management -->
+                    <div id="tab-projects" class="admin-tab-content">
+                        <div class="glass-panel header-panel" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h2>Manage Projects</h2>
+                                <p>Add, edit, or remove projects from the workshop.</p>
+                            </div>
+                            <button id="add-new-project-btn" class="primary-btn"><i class="fas fa-plus"></i> New Project</button>
+                        </div>
+
+                        <!-- Form for New/Edit Project -->
+                        <div id="project-form-container" class="glass-panel" style="display: none; margin-top: 1rem;">
+                            <h3 id="project-form-title">Add New Project</h3>
+                            <form id="project-crud-form">
+                                <input type="hidden" id="crud-project-id">
+                                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                    <div style="flex: 1;">
+                                        <label>Project ID (URL slug, no spaces)</label>
+                                        <input type="text" id="crud-project-slug" required>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <label>Project Name</label>
+                                        <input type="text" id="crud-project-name" required>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <label>Category</label>
+                                        <select id="crud-project-category" required>
+                                            <option value="Cosplay Creations">Cosplay Creations</option>
+                                            <option value="Workshop Projects">Workshop Projects</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <label>Description</label>
+                                <textarea id="crud-project-desc" rows="3" required></textarea>
+                                <label>Tags (Comma separated)</label>
+                                <input type="text" id="crud-project-tags" placeholder="e.g. 3D Printing, Electronics">
+                                
+                                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                                    <button type="submit" class="primary-btn">Save Project</button>
+                                    <button type="button" id="cancel-project-btn" class="secondary-btn">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="glass-panel" style="margin-top: 1rem;">
+                            <div id="projects-list-grid" class="log-grid">
+                                <!-- Loaded projects go here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Logs & Media (Combined) -->
+                    <div id="tab-logs" class="admin-tab-content">
+                        <div class="glass-panel header-panel">
+                            <h2>Logs & Media Management</h2>
+                            <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
+                                <select id="global-project-select" style="max-width: 300px;">
+                                    <option value="">Select a Project...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="logs-media-content" style="display: none; margin-top: 1rem;">
+                            <div class="admin-grid-container">
+                                <!-- Logs Column -->
+                                <div class="admin-grid-col glass-panel">
+                                    <h3>Add Log</h3>
+                                    <form id="log-form">
+                                        <input type="text" id="log-title" placeholder="Log Title" required>
+                                        <input type="date" id="log-date">
+                                        <textarea id="log-content" rows="4" placeholder="Log details..." required></textarea>
+                                        <button type="submit" class="primary-btn">Add Log</button>
+                                    </form>
+                                    <hr style="margin: 1rem 0; opacity: 0.2;">
+                                    <h3>Existing Logs</h3>
+                                    <div id="log-grid" class="log-grid" style="max-height: 400px; overflow-y: auto;"></div>
+                                </div>
+
+                                <!-- Media Column -->
+                                <div class="admin-grid-col glass-panel">
+                                    <h3>Add Media</h3>
+                                    <form id="media-form">
+                                        <input type="file" id="media-file" required>
+                                        <input type="text" id="media-description" placeholder="Description" required>
+                                        <button type="submit" class="primary-btn">Upload</button>
+                                        <p id="upload-progress" style="display:none; font-size: 0.8rem; margin-top: 0.5rem;"></p>
+                                    </form>
+                                    <hr style="margin: 1rem 0; opacity: 0.2;">
+                                    <h3>Existing Media</h3>
+                                    <div id="media-grid" class="media-management-grid" style="max-height: 400px; overflow-y: auto;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: System Status -->
+                    <div id="tab-system" class="admin-tab-content">
+                        <div class="glass-panel header-panel">
+                            <h2>System Controls</h2>
+                        </div>
+                        <div class="admin-grid-container" style="margin-top: 1rem;">
+                            <div class="admin-grid-col glass-panel">
+                                <h3>Project Progress (%)</h3>
+                                <form id="progress-form">
+                                    <select id="progress-project-id" required>
+                                        <!-- Populated -->
+                                    </select>
+                                    <div class="progress-control">
+                                        <input type="range" id="progress-slider" min="0" max="100" value="0">
+                                        <input type="number" id="progress-value" min="0" max="100" value="0">
+                                    </div>
+                                    <button type="submit" class="primary-btn">Update Progress</button>
+                                </form>
+                            </div>
+                            <div class="admin-grid-col glass-panel">
+                                <h3>Footer Status Message</h3>
+                                <form id="status-form">
+                                    <select id="status-level" required>
+                                        <option value="optimal">Optimal (Online)</option>
+                                        <option value="warning">Warning (Attention)</option>
+                                    </select>
+                                    <input type="text" id="status-message" placeholder="Custom Override Message (e.g. Working on suit!)">
+                                    <div style="display: flex; gap: 1rem;">
+                                        <button type="submit" class="primary-btn">Update</button>
+                                        <button type="button" id="clear-status-message" class="secondary-btn">Clear</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
         </div>
     </div>
     
-    <!-- Hidden audio elements for the special login/logout sounds -->
     <audio id="login-sound-rare" src="Media/sounds/Welcome.oga" preload="auto"></audio>
     <audio id="login-sound-common" src="Media/sounds/On.oga" preload="auto"></audio>
     <audio id="logout-sound-common" src="Media/sounds/Off.oga" preload="auto"></audio>
     <audio id="logout-sound-rare" src="Media/sounds/Abandon.oga" preload="auto"></audio>
 
-
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-    
-    <!-- CHANGED admin.js to script.js -->
     <script src="script.js" defer></script>
 </body>
 </html>
-

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Anaru's Workshop</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+
+    <div class="background-wrapper">
+        <div class="container" style="max-width: 500px; padding-top: 100px;">
+            <header>
+                <h1>Authentication</h1>
+                <p class="subtitle">Sign in or create an account</p>
+            </header>
+
+            <div class="glass-panel form-section" id="auth-forms">
+                <div id="login-form-container">
+                    <h2>Login</h2>
+                    <form id="user-login-form">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                        <button type="submit" class="primary-btn">Login</button>
+                    </form>
+                    <p style="margin-top: 1rem; text-align: center;">Don't have an account? <a href="#" id="show-register">Register here</a></p>
+                </div>
+
+                <div id="register-form-container" style="display: none;">
+                    <h2>Register</h2>
+                    <form id="user-register-form">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" required>
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" required minlength="6">
+                        <button type="submit" class="primary-btn">Create Account</button>
+                    </form>
+                    <p style="margin-top: 1rem; text-align: center;">Already have an account? <a href="#" id="show-login">Login here</a></p>
+                </div>
+
+                <div id="logged-in-container" style="display: none; text-align: center;">
+                    <h2>Welcome Back!</h2>
+                    <p>You are logged in as <span id="current-user-email"></span>.</p>
+                    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                        <a href="index.html" class="primary-btn" style="text-decoration: none;">Go to Home</a>
+                        <button id="user-logout-btn" class="secondary-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="project-nav" style="margin-top: 20px; justify-content: center;">
+                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Workshop</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    
+    <script src="script.js" defer></script>
+</body>
+</html>

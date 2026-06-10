@@ -2,26 +2,29 @@
 
 :root {
     --bg-color: #1a1c1e;
-    --card-bg: rgba(44, 48, 53, 0.8);
-    --border-color: rgba(60, 65, 70, 0.9);
+    --card-bg: rgba(30, 33, 36, 0.4); /* More transparent for blur */
+    --border-color: rgba(255, 255, 255, 0.1);
     --text-color: #f0f8ff;
     --text-muted-color: #a9b2c8;
     --font-header: 'Exo 2', sans-serif;
     --font-body: 'Lato', sans-serif;
 
     /* Accent Colors */
-    --accent-tech: #48D1CC; /* Medium Turquoise */
-    --accent-nature: #2E8B57; /* Sea Green for Anaru */
-    --accent-alastor: #c52424; /* Red for Alastor */
-    --accent-snufkin: #D2691E; /* Earthy brown for Snufkin */
-    --accent-helldiver: #FFD700; /* Gold for Helldiver */
-    --accent-alan-wake: #00FFFF; /* Eerie cyan for Alan Wake */
-    --accent-dr-darling: #FF00FF; /* Magenta for Dr. Darling */
-    --accent-nms-traveler: #FFA500; /* Orange for NMS Traveler */
-    --accent-aurora: #556B2F; /* Dark Olive Green for Aurora */
-    --accent-v60-t: #4169E1; /* Royal Blue for Project V60-T */
-    --accent-larp-armory: #8B4513; /* Saddle Brown for LARP Armory */
-    --accent-prop-lab: #32CD32; /* Lime Green for Prop Lab */
+    --accent-tech: #48D1CC;
+    --accent-nature: #2E8B57;
+    --accent-alastor: #c52424;
+    --accent-snufkin: #D2691E;
+    --accent-helldiver: #FFD700;
+    --accent-alan-wake: #00FFFF;
+    --accent-dr-darling: #FF00FF;
+    --accent-nms-traveler: #FFA500;
+    --accent-aurora: #556B2F;
+    --accent-v60-t: #4169E1;
+    --accent-larp-armory: #8B4513;
+    --accent-prop-lab: #32CD32;
+    --priority-admin: #ff5252;
+    --priority-partner: #ffb142;
+    --priority-regular: #34ace0;
 }
 
 body {
@@ -34,10 +37,9 @@ body {
 }
 
 .background-wrapper {
-    /* The background-image is now set by script.js */
     background-size: cover;
     background-position: center center;
-    background-attachment: fixed; /* Creates the parallax effect */
+    background-attachment: fixed;
     padding: 3rem 1rem;
     min-height: 100vh;
 }
@@ -47,15 +49,28 @@ body {
     margin: 0 auto;
 }
 
+/* Material You Glassmorphism Base */
+.glass-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 24px; /* Squircle radius */
+    padding: 2rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
 /* Header & Intro */
 header {
     text-align: center;
     margin-bottom: 3rem;
     padding: 2rem;
     background: var(--card-bg);
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
 .avatar {
@@ -65,7 +80,7 @@ header {
     border: 4px solid var(--accent-tech);
     object-fit: cover;
     margin-bottom: 1rem;
-    box-shadow: 0 0 20px rgba(72, 209, 204, 0.4); /* Updated shadow to match */
+    box-shadow: 0 0 20px rgba(72, 209, 204, 0.4);
 }
 
 h1 {
@@ -74,6 +89,13 @@ h1 {
     font-size: 3rem;
     margin: 0 0 0.5rem 0;
     letter-spacing: 1px;
+}
+
+h2 {
+    font-family: var(--font-header);
+    font-size: 2rem;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
 }
 
 .subtitle {
@@ -100,30 +122,21 @@ h1 {
 
 .intro-section {
     background: var(--card-bg);
-    border-radius: 12px;
+    border-radius: 24px;
     padding: 2rem;
     text-align: center;
     font-size: 1.2rem;
     color: var(--text-muted-color);
     margin-bottom: 4rem;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
-
 
 /* Projects Section (Main Page) */
 .projects-section {
     margin-bottom: 4rem;
-}
-
-h2 {
-    font-family: var(--font-header);
-    font-size: 2.5rem;
-    color: var(--accent-tech);
-    border-bottom: 2px solid var(--accent-tech);
-    padding-bottom: 0.5rem;
-    display: inline-block;
-    margin-bottom: 2rem;
 }
 
 .project-grid {
@@ -141,20 +154,22 @@ h2 {
 .project-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 24px;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    transition: all 0.3s ease-in-out;
-    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     width: 100%;
     box-sizing: border-box;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
 .project-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 30px rgba(72, 209, 204, 0.2); /* Updated shadow */
-    border-color: var(--accent-tech);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(72, 209, 204, 0.3);
+    border-color: rgba(72, 209, 204, 0.5);
 }
 
 .project-card h3 {
@@ -176,6 +191,7 @@ h2 {
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 4px;
     overflow: hidden;
+    margin-top: 1rem;
 }
 .progress-fill {
     height: 100%;
@@ -189,134 +205,206 @@ h2 {
 }
 .skill-tags span {
     display: inline-block;
-    background-color: rgba(46, 139, 87, 0.2);
-    color: var(--accent-nature);
-    border: 1px solid var(--accent-nature);
-    padding: 4px 8px;
-    margin: 3px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 12px;
+    margin: 4px;
     font-size: 0.8rem;
-    border-radius: 6px;
-    font-weight: bold;
+    border-radius: 20px;
 }
 
-/* --- STYLES FOR SUB-PAGES (Anaru, Alastor, etc.) --- */
-
-/* Back Button Style */
-.back-link {
-    display: inline-block;
+/* Nav & Generic Buttons */
+.project-nav {
+    display: flex;
     margin-bottom: 2rem;
+}
+
+.back-link {
     color: var(--accent-tech);
     text-decoration: none;
     font-weight: bold;
     transition: color 0.2s ease;
+    background: rgba(0,0,0,0.5);
+    padding: 10px 20px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
 }
 .back-link:hover {
-    color: var(--text-color);
+    background: var(--accent-tech);
+    color: var(--bg-color);
 }
 .back-link i {
     margin-right: 8px;
 }
 
-/* Page Content Section - UPDATED */
-.page-section {
-     margin-bottom: 3rem;
-     background: var(--card-bg);
-     border: 1px solid var(--border-color);
-     border-radius: 12px;
-     padding: 2rem;
-     backdrop-filter: blur(10px);
+.primary-btn, .secondary-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 24px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
-
-.page-section h3 {
-    font-family: var(--font-header);
-    font-size: 1.8rem;
+.primary-btn {
+    background-color: var(--accent-tech);
+    color: #1a1c1e;
+}
+.primary-btn:hover {
+    background-color: #00aaff;
+    transform: scale(1.05);
+}
+.secondary-btn {
+    background-color: rgba(255,255,255,0.1);
     color: var(--text-color);
-    margin-top: 2rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-color);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+.secondary-btn:hover {
+    background-color: rgba(255,255,255,0.2);
 }
 
-/* Gallery Grid */
-.gallery-grid {
+/* Logs & Media */
+.log-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: 1fr;
     gap: 1.5rem;
 }
 
-.placeholder-card {
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    min-height: 250px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    border-radius: 12px;
-    color: var(--text-color);
-    padding: 1rem;
-    transition: border-color 0.3s ease, background-color 0.3s ease;
-    background: rgba(0,0,0,0.2); /* Darker background for contrast inside the section */
-    border: 1px solid var(--border-color);
-}
-.placeholder-card:hover {
-    border-color: var(--accent-tech);
-    background-color: rgba(72, 209, 204, 0.1); /* Updated hover */
-}
-.placeholder-card h3 {
-    margin: 0 0 0.5rem 0;
-    color: var(--text-color);
-    font-size: 1.2rem;
-    border-bottom: none; /* Remove border from h3 inside placeholder */
-}
-.placeholder-card p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: var(--text-color); /* Ensure text is always bright */
-}
-
-/* Project Log Card */
 .log-card {
-    background: rgba(0,0,0,0.2); /* Darker background for contrast inside the section */
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 20px;
     padding: 1.5rem;
-    margin-bottom: 1.5rem;
 }
 .log-card h3 {
-    font-family: var(--font-header);
-    font-size: 1.5rem;
-    margin: 0 0 0.5rem 0;
-    color: var(--accent-tech); /* Default color, overridden below */
-    border-bottom: none; /* Remove border from h3 inside log card */
+    color: var(--accent-tech);
+    margin-top: 0;
 }
-.log-card p {
-    color: var(--text-muted-color);
-    margin: 0;
-}
-
-/* Style for the date on log cards */
 .log-card-date {
     font-size: 0.9rem;
     color: var(--text-muted-color);
-    margin-bottom: 0.5rem !important; /* Ensure it has spacing */
+    margin-bottom: 0.5rem;
     font-style: italic;
 }
 
+.media-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
 
-/* --- General Footer & Animations --- */
-footer {
-    text-align: center;
-    color: var(--text-muted-color);
-    padding: 1.5rem;
-    margin-top: 3rem;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
+.media-gallery img, .media-gallery video {
+    width: 100%;
+    border-radius: 16px;
+    object-fit: cover;
+    height: 150px;
+}
+
+/* Admin Dashboard Specifics */
+.admin-dashboard-layout {
+    display: flex;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: calc(100vh - 6rem);
+}
+
+.admin-sidebar {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex-shrink: 0;
+}
+
+.admin-main-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.admin-tab-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.admin-tab-btn {
+    background: transparent !important;
+    color: var(--text-color) !important;
+    border: none !important;
+    padding: 15px !important;
+    text-align: left;
+    border-radius: 16px !important;
+    font-size: 1.1rem !important;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.admin-tab-btn.active {
+    background: rgba(255,255,255,0.1) !important;
+    border-left: 4px solid var(--accent-tech) !important;
+}
+
+.admin-tab-btn:hover {
+    background: rgba(255,255,255,0.05) !important;
+}
+
+.admin-tab-content {
+    display: none;
+    animation: fadeIn 0.3s;
+}
+
+.admin-tab-content.active {
+    display: block;
+}
+
+.header-panel {
+    margin-bottom: 2rem;
+}
+
+.admin-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 1rem;
     border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background-color: rgba(0,0,0,0.5);
+    color: var(--text-color);
+    box-sizing: border-box;
     backdrop-filter: blur(10px);
 }
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-tech);
+}
+
+.requests-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.request-card {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.req-priority-admin { border-left: 4px solid var(--priority-admin); }
+.req-priority-partner { border-left: 4px solid var(--priority-partner); }
+.req-priority-regular { border-left: 4px solid var(--priority-regular); }
 
 /* Scroll Animation */
 .fade-in {
@@ -324,372 +412,24 @@ footer {
     transform: translateY(30px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
-
 .fade-in.visible {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* --- Image Modal (Lightbox) Styles --- */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top of everything */
-    padding-top: 50px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.modal-content {
-    margin: auto;
-    display: block;
-    width: 80%;
-    max-width: 900px;
-    transition: transform 0.2s ease-in-out; /* Smooth zoom transition */
-}
-.modal-content.zoomed {
-    transform: scale(1.5);
-    cursor: zoom-out;
-}
-.modal-content:not(.zoomed) {
-    cursor: zoom-in;
-}
-
-.close-button {
-    position: absolute;
-    top: 15px;
-    right: 35px;
-    color: #f1f1f1;
-    font-size: 40px;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.close-button:hover,
-.close-button:focus {
-    color: #bbb;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/*
---- --- --- --- --- --- --- --- --- --- --- ---
-    PAGE-SPECIFIC COLOR OVERRIDES
---- --- --- --- --- --- --- --- --- --- --- ---
-*/
-
-/* --- Anaru Page --- */
-.anaru-page h2,
-.anaru-page .back-link,
-.anaru-page .log-card h3 { color: var(--accent-nature); }
-.anaru-page h2 { border-bottom-color: var(--accent-nature); }
-.anaru-page .placeholder-card:hover { border-color: var(--accent-nature); background-color: rgba(46, 139, 87, 0.1); }
-
-/* --- Alastor Page --- */
-.alastor-page h2,
-.alastor-page .back-link,
-.alastor-page .log-card h3 { color: var(--accent-alastor); }
-.alastor-page h2 { border-bottom-color: var(--accent-alastor); }
-.alastor-page .placeholder-card:hover { border-color: var(--accent-alastor); background-color: rgba(197, 36, 36, 0.1); }
-
-/* --- Snufkin Page --- */
-.snufkin-page h2,
-.snufkin-page .back-link,
-.snufkin-page .log-card h3 { color: var(--accent-snufkin); }
-.snufkin-page h2 { border-bottom-color: var(--accent-snufkin); }
-.snufkin-page .placeholder-card:hover { border-color: var(--accent-snufkin); background-color: rgba(210, 105, 30, 0.1); }
-
-/* --- Helldiver Page --- */
-.helldiver-page h2,
-.helldiver-page .back-link,
-.helldiver-page .log-card h3 { color: var(--accent-helldiver); }
-.helldiver-page h2 { border-bottom-color: var(--accent-helldiver); }
-.helldiver-page .placeholder-card:hover { border-color: var(--accent-helldiver); background-color: rgba(255, 215, 0, 0.1); }
-
-/* --- Alan Wake Page --- */
-.alan-wake-page h2,
-.alan-wake-page .back-link,
-.alan-wake-page .log-card h3 { color: var(--accent-alan-wake); }
-.alan-wake-page h2 { border-bottom-color: var(--accent-alan-wake); }
-.alan-wake-page .placeholder-card:hover { border-color: var(--accent-alan-wake); background-color: rgba(0, 255, 255, 0.1); }
-
-/* --- Dr. Darling Page --- */
-.dr-darling-page h2,
-.dr-darling-page .back-link,
-.dr-darling-page .log-card h3 { color: var(--accent-dr-darling); }
-.dr-darling-page h2 { border-bottom-color: var(--accent-dr-darling); }
-.dr-darling-page .placeholder-card:hover { border-color: var(--accent-dr-darling); background-color: rgba(255, 0, 255, 0.1); }
-
-/* --- NMS Traveler Page --- */
-.nms-traveler-page h2,
-.nms-traveler-page .back-link,
-.nms-traveler-page .log-card h3 { color: var(--accent-nms-traveler); }
-.nms-traveler-page h2 { border-bottom-color: var(--accent-nms-traveler); }
-.nms-traveler-page .placeholder-card:hover { border-color: var(--accent-nms-traveler); background-color: rgba(255, 165, 0, 0.1); }
-
-/* --- Aurora Page --- */
-.aurora-page h2,
-.aurora-page .back-link,
-.aurora-page .log-card h3 { color: var(--accent-aurora); }
-.aurora-page h2 { border-bottom-color: var(--accent-aurora); }
-.aurora-page .placeholder-card:hover { border-color: var(--accent-aurora); background-color: rgba(85, 107, 47, 0.1); }
-
-/* --- Project V60-T Page --- */
-.project-v60-t-page h2,
-.project-v60-t-page .back-link,
-.project-v60-t-page .log-card h3 { color: var(--accent-v60-t); }
-.project-v60-t-page h2 { border-bottom-color: var(--accent-v60-t); }
-.project-v60-t-page .placeholder-card:hover { border-color: var(--accent-v60-t); background-color: rgba(65, 105, 225, 0.1); }
-
-/* --- LARP Armory Page --- */
-.larp-armory-page h2,
-.larp-armory-page .back-link,
-.larp-armory-page .log-card h3 { color: var(--accent-larp-armory); }
-.larp-armory-page h2 { border-bottom-color: var(--accent-larp-armory); }
-.larp-armory-page .placeholder-card:hover { border-color: var(--accent-larp-armory); background-color: rgba(139, 69, 19, 0.1); }
-
-/* --- Prop & Electronics Lab Page --- */
-.prop-electronics-lab-page h2,
-.prop-electronics-lab-page .back-link,
-.prop-electronics-lab-page .log-card h3 { color: var(--accent-prop-lab); }
-.prop-electronics-lab-page h2 { border-bottom-color: var(--accent-prop-lab); }
-.prop-electronics-lab-page .placeholder-card:hover { border-color: var(--accent-prop-lab); background-color: rgba(50, 205, 50, 0.1); }
-
-
-/*
---- --- --- --- --- --- --- --- --- --- --- ---
-    ADMIN PANEL STYLES
---- --- --- --- --- --- --- --- --- --- --- ---
-*/
-.admin-container {
-    max-width: 800px;
-    margin: auto;
-}
-.form-section {
-    background: var(--card-bg);
-    padding: 2rem;
-    border-radius: 12px;
-    margin-bottom: 2rem;
-    border: 1px solid var(--border-color);
-}
-.admin-page h2 {
-    color: var(--accent-tech);
-    border-bottom: none; /* Override main site's h2 style */
-}
-.admin-page label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text-muted-color);
-}
-.admin-page input, .admin-page select, .admin-page textarea, .admin-page button {
-    width: 100%;
-    padding: 0.8rem;
-    margin-bottom: 1rem;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    background-color: #1a1c1e;
-    color: var(--text-color);
-    font-size: 1rem;
-    box-sizing: border-box; /* Ensures padding doesn't break width */
-}
-.admin-page button {
-    background-color: var(--accent-tech);
-    color: #1a1c1e;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-.admin-page button:hover {
-    background-color: #00aaff;
-}
-.admin-page #logout-button {
-    background-color: var(--accent-alastor);
-    color: var(--text-color);
-}
-.admin-page .progress-control {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-.admin-page .progress-control input[type="range"] {
-    flex-grow: 1;
-}
-.admin-page .progress-control input[type="number"] {
-    width: 80px;
-}
-
-/* --- NEW: Admin Tab Navigation --- */
-.admin-tab-nav {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-.admin-tab-btn {
-    flex-grow: 1;
-    background-color: var(--card-bg) !important;
-    color: var(--text-muted-color) !important;
-    border: 1px solid var(--border-color) !important;
-    margin-bottom: 0 !important;
-    font-size: 1rem !important;
-    font-weight: bold;
-    font-family: var(--font-header);
-    padding: 1rem !important;
-}
-.admin-tab-btn:hover {
-    background-color: rgba(60, 65, 70, 0.9) !important; /* border-color */
-    color: var(--text-color) !important;
-}
-.admin-tab-btn.active {
-    background-color: var(--accent-tech) !important;
-    color: var(--bg-color) !important;
-    border-color: var(--accent-tech) !important;
-    box-shadow: 0 0 15px rgba(72, 209, 204, 0.4);
-}
-.admin-tab-btn i {
-    margin-right: 8px;
-}
-
-/* --- NEW: Admin Tab Content --- */
-.admin-tab-content {
-    display: none; /* Hidden by default */
-}
-.admin-tab-content.active {
-    display: block; /* Shown when active */
-}
-
-
-/* --- NEW: Admin Grid Layout (for tabs) --- */
-.admin-grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
-    gap: 2rem;
-    /* Removed margin-bottom, as tabs control spacing */
-}
-
-.admin-grid-col {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem; /* This will space out the form-sections inside the column */
-}
-
-/* Make the grid stack on smaller screens */
-@media (max-width: 768px) {
-    .admin-grid-container {
-        grid-template-columns: 1fr; /* Single column */
-    }
-}
-
-/* Override the default margin-bottom for form-sections inside the grid/tabs */
-.admin-tab-content .form-section {
-    margin-bottom: 0;
-}
-/* We still want margin on the full-width sections in the "Manage" tab */
-#tab-manage .form-section {
-    margin-bottom: 2rem;
-}
-
-
-/* --- Media Management Grid Styles --- */
-.media-management-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-.media-item-card {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 0.5rem;
-    background-color: #1a1c1e; /* Match input fields */
+footer {
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem; /* Space elements inside card */
-}
-.media-item-card img,
-.media-item-card video {
-    width: 100%;
-    height: 100px; /* Fixed height for consistency */
-    object-fit: cover;
-    border-radius: 6px;
-}
-.media-item-card p { /* This <p> is fallback text */
-    font-size: 0.8rem;
     color: var(--text-muted-color);
-    margin: 0.5rem 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-/* Style for the description input */
-.media-description-input {
-    font-size: 0.9rem !important;
-    padding: 0.5rem !important;
-    margin-bottom: 0 !important; /* Override default */
-}
-/* Style for the edit button */
-.edit-media-btn {
-    background-color: var(--accent-v60-t) !important;
-    color: var(--text-color) !important;
-    font-size: 0.9rem !important;
-    padding: 0.5rem !important;
-    margin-bottom: 0 !important; /* Override default */
-}
-.delete-media-btn {
-    background-color: var(--accent-alastor);
-    color: var(--text-color);
-    font-size: 0.9rem;
-    padding: 0.5rem;
-    margin-bottom: 0; /* Override default */
-}
-.delete-media-btn.confirm-delete {
-    background-color: #ff0000; /* Brighter red for confirm */
-    font-weight: bold;
-}
-
-/* --- Log Management Grid Styles --- */
-.log-management-grid {
-    display: grid;
-    grid-template-columns: 1fr; /* One log per row */
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-}
-.log-item-card {
+    padding: 1.5rem;
+    margin-top: 3rem;
+    background: var(--card-bg);
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1rem;
-    background-color: #1a1c1e; /* Match input fields */
-    display: flex;
-    flex-direction: column;
-    gap: 1rem; /* Space elements inside card */
 }
-.log-item-card input,
-.log-item-card textarea {
-    margin-bottom: 0 !important; /* Override default */
-}
-.log-item-card textarea {
-    min-height: 100px;
-    resize: vertical;
-    font-family: var(--font-body);
-}
-.log-item-card .button-group {
-    display: flex;
-    gap: 1rem;
-}
-.edit-log-btn {
-    background-color: var(--accent-v60-t) !important;
-    color: var(--text-color) !important;
-}
-.delete-log-btn {
-    background-color: var(--accent-alastor) !important;
-    color: var(--text-color) !important;
-}
-.delete-log-btn.confirm-delete {
-    background-color: #ff0000 !important; /* Brighter red for confirm */
-    font-weight: bold;
-}
-

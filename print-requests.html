@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Print Requests | Anaru's Workshop</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="print-requests-page">
+
+    <div class="background-wrapper">
+        <div class="container">
+            <nav class="project-nav">
+                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Workshop</a>
+                <a href="login.html" id="nav-login-link" class="back-link" style="margin-left: auto;">Login / Register <i class="fas fa-sign-in-alt"></i></a>
+            </nav>
+
+            <header>
+                <h1>3D Print Requests</h1>
+                <p class="subtitle">Submit a request and track its progress.</p>
+            </header>
+
+            <div id="auth-warning" class="glass-panel form-section" style="text-align: center; margin-bottom: 2rem;">
+                <h2>Authentication Required</h2>
+                <p>You must be logged in to submit and track 3D print requests.</p>
+                <a href="login.html" class="primary-btn" style="display: inline-block; text-decoration: none; margin-top: 1rem;">Go to Login</a>
+            </div>
+
+            <div id="requests-content" style="display: none;">
+                <section class="glass-panel form-section" style="margin-bottom: 2rem;">
+                    <h2>Submit a New Request</h2>
+                    <form id="print-request-form">
+                        <label for="pr-title">Item Name / Title</label>
+                        <input type="text" id="pr-title" required>
+
+                        <label for="pr-link">Link to 3D Model (Thingiverse, Printables, etc.)</label>
+                        <input type="url" id="pr-link" placeholder="https://" required>
+
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <div style="flex: 1;">
+                                <label for="pr-color">Color Preference</label>
+                                <input type="text" id="pr-color" placeholder="e.g. Black, Neon Green, No Preference" required>
+                            </div>
+                            <div style="flex: 1;">
+                                <label for="pr-size">Size/Scale</label>
+                                <input type="text" id="pr-size" placeholder="e.g. 100%, 15cm tall" required>
+                            </div>
+                        </div>
+
+                        <label for="pr-description">Description / Special Instructions</label>
+                        <textarea id="pr-description" rows="4" placeholder="Any special infill requirements, material preference, etc."></textarea>
+
+                        <button type="submit" class="primary-btn" style="margin-top: 1rem;"><i class="fas fa-paper-plane"></i> Submit Request</button>
+                    </form>
+                </section>
+
+                <section class="glass-panel form-section">
+                    <h2>Your Requests</h2>
+                    <div id="user-requests-list" class="log-grid" style="margin-top: 1rem;">
+                        <p>Loading your requests...</p>
+                    </div>
+                </section>
+            </div>
+
+            <footer id="footer-section" style="margin-top: 4rem;">
+                <p>&copy; <span id="current-year"></span> Anaru's Workshop. <span id="system-status">Testing systems...</span></p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    
+    <script src="script.js" defer></script>
+</body>
+</html>
