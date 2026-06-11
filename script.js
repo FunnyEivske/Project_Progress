@@ -476,14 +476,42 @@ document.addEventListener('DOMContentLoaded', function() {
         const extraControls = document.getElementById('project-extra-controls');
         const formTitle = document.getElementById('project-form-title');
 
+        // Modal Tab switching
+        const modalTabs = document.querySelectorAll('.modal-tab-btn');
+        modalTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                if (tab.style.display === 'none') return;
+                document.querySelectorAll('.modal-tab-btn').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.modal-tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('modaltab-' + tab.dataset.modaltab).classList.add('active');
+            });
+        });
+
         const openModal = (isEdit = false) => {
             modalOverlay.classList.add('active');
+            
+            // Reset to Details tab
+            document.querySelectorAll('.modal-tab-btn').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.modal-tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector('.modal-tab-btn[data-modaltab="details"]').classList.add('active');
+            document.getElementById('modaltab-details').classList.add('active');
+
             if (!isEdit) {
                 document.getElementById('project-crud-form').reset();
                 document.getElementById('crud-project-id').value = '';
                 document.getElementById('crud-project-slug').disabled = false;
                 formTitle.textContent = 'Add New Project';
-                extraControls.style.display = 'none';
+                
+                // Hide other tabs until saved
+                document.getElementById('modal-tab-progress-btn').style.display = 'none';
+                document.getElementById('modal-tab-logs-btn').style.display = 'none';
+                document.getElementById('modal-tab-media-btn').style.display = 'none';
+            } else {
+                // Show all tabs
+                document.getElementById('modal-tab-progress-btn').style.display = 'block';
+                document.getElementById('modal-tab-logs-btn').style.display = 'block';
+                document.getElementById('modal-tab-media-btn').style.display = 'block';
             }
         };
 
@@ -511,7 +539,11 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('crud-project-id').value = id;
             document.getElementById('crud-project-slug').disabled = true;
             formTitle.textContent = 'Edit Project';
-            extraControls.style.display = 'block';
+            
+            // Reveal Tabs
+            document.getElementById('modal-tab-progress-btn').style.display = 'block';
+            document.getElementById('modal-tab-logs-btn').style.display = 'block';
+            document.getElementById('modal-tab-media-btn').style.display = 'block';
             
             // Reload grid but keep modal open
             loadAdminProjects();
@@ -657,10 +689,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         const doc = await db.collection('projects').doc(docId).get();
                         if(doc.exists) {
                             const p = doc.data();
+                            openModal(true);
                             
-                            document.getElementById('project-modal-overlay').classList.add('active');
                             document.getElementById('project-form-title').textContent = 'Edit Project';
-                            document.getElementById('project-extra-controls').style.display = 'block';
 
                             document.getElementById('crud-project-id').value = docId;
                             document.getElementById('crud-project-slug').value = docId;
